@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - RAVION</title>
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <!-- ==========================================
+    PAGE-SPECIFIC STYLES
+    
+    Cart page has unique elements:
+    - Quantity selector (+ and - buttons)
+    - Cart item layout
+    - Free shipping progress bar
+    - Coupon code input
+    - Secure checkout badges
+    =========================================== -->
+    <style>
+        /* Free shipping progress bar */
+        .shipping-progress {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 20px 25px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .shipping-progress p {
+            font-size: 0.8rem;
+            color: var(--light-gray);
+            margin: 0 auto 12px auto;
+            max-width: none;
+        }
+
+        .shipping-progress .highlight {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        /* Progress bar track */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            position: relative;
+            margin-top: 10px;
+        }
+
+        /* Progress bar fill (gold) */
+        .progress-fill {
+            height: 100%;
+            background: var(--gold);
+            width: 75%;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 12px;
+            height: 12px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        /* Quantity selector */
+        .qty-selector {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-top: 8px;
+        }
+
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            background: var(--dark);
+            border: 1px solid var(--border);
+            color: var(--white);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .qty-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .qty-value {
+            width: 40px;
+            height: 32px;
+            background: var(--dark);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            border-left: none;
+            border-right: none;
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Coupon code section */
+        .coupon-section {
+            display: flex;
+            gap: 0;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .coupon-section input {
+            flex: 1;
+            padding: 12px 15px;
+            background: var(--dark);
+            border: 1px solid var(--border);
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            outline: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .coupon-section input:focus {
+            border-color: var(--gold);
+        }
+
+        .coupon-section button {
+            padding: 12px 20px;
+            background: var(--gold);
+            color: var(--black);
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .coupon-section button:hover {
+            background: var(--gold-hover);
+        }
+
+        /* Applied coupon tag */
+        .applied-coupon {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(200, 164, 90, 0.08);
+            border: 1px dashed var(--gold);
+            padding: 10px 15px;
+            margin-bottom: 15px;
+        }
+
+        .applied-coupon span {
+            font-size: 0.78rem;
+            color: var(--gold);
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .applied-coupon .remove-coupon {
+            font-size: 0.7rem;
+            color: var(--gray);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .applied-coupon .remove-coupon:hover {
+            color: var(--red);
+        }
+
+        /* Secure checkout badges */
+        .secure-badges {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .secure-badge {
+            text-align: center;
+            font-size: 0.65rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .secure-badge .badge-icon {
+            font-size: 1.2rem;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Cart item size/color display */
+        .item-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .item-options span {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        .item-options .option-value {
+            color: var(--light-gray);
+            font-weight: 500;
+        }
+
+        /* Continue shopping link */
+        .continue-shopping {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .continue-shopping:hover {
+            color: var(--gold);
+        }
+
+        @media (max-width: 768px) {
+            .shipping-progress {
+                padding: 15px;
+            }
+
+            .secure-badges {
+                gap: 12px;
+            }
+
+            .secure-badge {
+                font-size: 0.58rem;
+            }
+
+            .coupon-section input {
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .item-options {
+                flex-direction: column;
+                gap: 3px;
+            }
+
+            .secure-badges {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <input type="checkbox" id="menu-checkbox">
+    <nav class="navbar">
+        <div class="container">
+            <a href="Index.html" class="logo">
+                <img src="Images/Logo.png" alt="RAVION">
+            </a>
+            <ul class="nav-links">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="pricing.html">Membership</a></li>
+                <li><a href="team.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="search.html">&#x1F50D;</a>
+                <a href="wishlist.html">&#x2661;</a>
+                <a href="cart.html">&#x1F6D2;</a>
+                <a href="login.html">&#x263A;</a>
+                <label for="menu-checkbox" class="menu-toggle">&#9776;</label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="Index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="pricing.html">Membership</a>
+        <a href="team.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="testimonials.html">Reviews</a>
+        <a href="search.html">Search</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Shopping Cart</h1>
+            <p>3 Items in your cart</p>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    CART CONTENT
+    
+    TWO COLUMN LAYOUT:
+    Left (bigger): Cart items list
+    Right (smaller): Order summary + checkout
+    
+    DESIGN CHOICES:
+    - Shipping progress bar (shows how close 
+      to free shipping - creates urgency)
+    - Product image + details + quantity
+    - Coupon code input
+    - Secure checkout badges (trust signals)
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <!-- ============================
+            FREE SHIPPING PROGRESS BAR
+            
+            Shows user how close they are 
+            to getting free delivery.
+            
+            "You're ₹502 away from FREE shipping!"
+            
+            This is a SALES TRICK:
+            Makes user add more items to cart 
+            to reach free shipping.
+            Premium brands do this.
+            ============================ -->
+            <div class="shipping-progress">
+                <p>You're <span class="highlight">&#8377;502 away</span> from <span class="highlight">FREE Shipping!</span></p>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+
+            <!-- TWO COLUMN LAYOUT -->
+            <div class="cart-layout">
+
+                <!-- ============================
+                LEFT COLUMN: CART ITEMS
+                
+                Each item shows:
+                - Product image
+                - Product name
+                - Category
+                - Size + Color options
+                - Quantity selector
+                - Price
+                - Remove button
+                ============================ -->
+                <div class="cart-items">
+
+                    <!-- ═══════════════════════
+                    CART ITEM 1: Polo
+                    ═══════════════════════ -->
+                    <div class="cart-item">
+                        <img src="Images/product-polo.jpg" alt="Classic Pique Polo">
+                        <div class="cart-item-info">
+                            <h3>Classic Pique Polo</h3>
+                            <div class="item-options">
+                                <span>Size: <span class="option-value">M</span></span>
+                                <span>Color: <span class="option-value">Navy</span></span>
+                            </div>
+                            <div class="qty-selector">
+                                <button class="qty-btn">&#8722;</button>
+                                <span class="qty-value">1</span>
+                                <button class="qty-btn">&#43;</button>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="item-price">&#8377;799</p>
+                            <button class="remove-btn">Remove</button>
+                        </div>
+                    </div>
+
+
+                    <!-- ═══════════════════════
+                    CART ITEM 2: Jacket
+                    ═══════════════════════ -->
+                    <div class="cart-item">
+                        <img src="Images/product-jacket.jpg" alt="Urban Leather Jacket">
+                        <div class="cart-item-info">
+                            <h3>Urban Leather Jacket</h3>
+                            <div class="item-options">
+                                <span>Size: <span class="option-value">L</span></span>
+                                <span>Color: <span class="option-value">Black</span></span>
+                            </div>
+                            <div class="qty-selector">
+                                <button class="qty-btn">&#8722;</button>
+                                <span class="qty-value">1</span>
+                                <button class="qty-btn">&#43;</button>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="item-price">&#8377;2,499</p>
+                            <button class="remove-btn">Remove</button>
+                        </div>
+                    </div>
+
+
+                    <!-- ═══════════════════════
+                    CART ITEM 3: Jeans
+                    ═══════════════════════ -->
+                    <div class="cart-item">
+                        <img src="Images/product-jeans.jpg" alt="Slim Fit Dark Jeans">
+                        <div class="cart-item-info">
+                            <h3>Slim Fit Dark Jeans</h3>
+                            <div class="item-options">
+                                <span>Size: <span class="option-value">32</span></span>
+                                <span>Color: <span class="option-value">Dark Blue</span></span>
+                            </div>
+                            <div class="qty-selector">
+                                <button class="qty-btn">&#8722;</button>
+                                <span class="qty-value">2</span>
+                                <button class="qty-btn">&#43;</button>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="item-price">&#8377;1,998</p>
+                            <button class="remove-btn">Remove</button>
+                        </div>
+                    </div>
+
+
+                    <!-- ═══════════════════════════════════
+                    ✅ TO ADD ANOTHER CART ITEM:
+                    Copy from START to END below.
+                    Paste ABOVE this comment.
+                    Change image, name, size, color, price.
+                    ═══════════════════════════════════ -->
+
+                    <!-- === START: COPY FOR NEW CART ITEM ===
+
+                    <div class="cart-item">
+                        <img src="Images/YOUR-IMAGE.jpg" alt="PRODUCT NAME">
+                        <div class="cart-item-info">
+                            <h3>PRODUCT NAME</h3>
+                            <div class="item-options">
+                                <span>Size: <span class="option-value">M</span></span>
+                                <span>Color: <span class="option-value">Black</span></span>
+                            </div>
+                            <div class="qty-selector">
+                                <button class="qty-btn">&#8722;</button>
+                                <span class="qty-value">1</span>
+                                <button class="qty-btn">&#43;</button>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="item-price">&#8377;PRICE</p>
+                            <button class="remove-btn">Remove</button>
+                        </div>
+                    </div>
+
+                    === END: COPY FOR NEW CART ITEM === -->
+
+
+                    <!-- Continue Shopping Link -->
+                    <a href="products.html" class="continue-shopping">
+                        &larr; Continue Shopping
+                    </a>
+
+                </div>
+
+
+                <!-- ============================
+                RIGHT COLUMN: ORDER SUMMARY
+                
+                Shows price breakdown:
+                - Subtotal
+                - Discount (coupon)
+                - Delivery charges
+                - Total amount
+                
+                position: sticky keeps this 
+                visible while scrolling cart items
+                ============================ -->
+                <div class="cart-summary">
+
+                    <h3>Order Summary</h3>
+
+                    <!-- Applied Coupon Tag -->
+                    <div class="applied-coupon">
+                        <span>&#10003; RAVION40 Applied</span>
+                        <button class="remove-coupon">Remove</button>
+                    </div>
+
+                    <!-- Price Breakdown -->
+                    <div class="summary-row">
+                        <span>Subtotal (4 items)</span>
+                        <span>&#8377;5,296</span>
+                    </div>
+
+                    <div class="summary-row discount">
+                        <span>Discount (40%)</span>
+                        <span>- &#8377;2,118</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Delivery</span>
+                        <span>&#8377;99</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>VIP Savings</span>
+                        <span style="color: var(--green);">- &#8377;99</span>
+                    </div>
+
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>&#8377;3,178</span>
+                    </div>
+
+                    <div style="font-size: 0.72rem; color: var(--green); text-align: center; margin-top: 10px; margin-bottom: 20px;">
+                        You're saving &#8377;2,217 on this order!
+                    </div>
+
+                    <!-- Coupon Input -->
+                    <div class="coupon-section">
+                        <input type="text" placeholder="Enter coupon code">
+                        <button>Apply</button>
+                    </div>
+
+                    <!-- Checkout Button -->
+                    <a href="checkout.html" class="btn btn-gold btn-full" style="margin-top: 10px;">
+                        Proceed to Checkout
+                    </a>
+
+                    <!-- Secure Badges -->
+                    <div class="secure-badges">
+                        <div class="secure-badge">
+                            <span class="badge-icon">&#128274;</span>
+                            Secure Checkout
+                        </div>
+                        <div class="secure-badge">
+                            <span class="badge-icon">&#x21BA;</span>
+                            Easy Returns
+                        </div>
+                        <div class="secure-badge">
+                            <span class="badge-icon">&#9733;</span>
+                            Genuine Products
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    RECOMMENDED PRODUCTS
+    
+    "You might also like" section below cart.
+    Shows products to encourage more purchases.
+    Premium e-commerce always does this.
+    =========================================== -->
+
+    <section class="section section-dark">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>You Might Also Like</h2>
+                <div class="gold-line"></div>
+            </div>
+
+            <div class="product-grid">
+
+                <!-- Recommendation 1 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-streetwear.jpg" alt="Street Hoodie">
+                        <span
+                        class="sale-badge">Hot</span>  
+                    <span class="wishlist-icon">&#x2661;</span>  
+                </div>  
+                <div class="product-info">  
+                    <p class="category">Streetwear</p>  
+                    <h3>Oversized Street Hoodie</h3>  
+                    <div class="price">  
+                        <span class="current">&#8377;1,299</span>  
+                        <span class="old">&#8377;1,799</span>  
+                    </div>  
+                    <div class="product-actions">  
+                        <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>  
+                        <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>  
+                    </div>  
+                </div>  
+            </div>  
+
+            <!-- Recommendation 2 -->  
+            <div class="product-card">  
+                <div class="product-image">  
+                    <img src="Images/product-shirt.jpg" alt="Casual Shirt">  
+                    <span class="wishlist-icon">&#x2661;</span>  
+                </div>  
+                <div class="product-info">  
+                    <p class="category">Shirts</p>  
+                    <h3>Casual Linen Shirt</h3>  
+                    <div class="price">  
+                        <span class="current">&#8377;899</span>  
+                        <span class="old">&#8377;1,299</span>  
+                    </div>  
+                    <div class="product-actions">  
+                        <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>  
+                        <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>  
+                    </div>  
+                </div>  
+            </div>  
+
+            <!-- Recommendation 3 -->  
+            <div class="product-card">  
+                <div class="product-image">  
+                    <img src="Images/product-bag.jpg" alt="Leather Bag">  
+                    <span class="sale-badge">Sale</span>  
+                    <span class="wishlist-icon">&#x2661;</span>  
+                </div>  
+                <div class="product-info">  
+                    <p class="category">Bags</p>  
+                    <h3>Executive Leather Bag</h3>  
+                    <div class="price">  
+                        <span class="current">&#8377;1,499</span>  
+                        <span class="old">&#8377;1,999</span>  
+                    </div>  
+                    <div class="product-actions">  
+                        <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>  
+                        <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>  
+                    </div>  
+                </div>  
+            </div>  
+
+        </div>  
+
+    </div>  
+</section>  
+
+
+<!-- FOOTER -->  
+<footer class="footer">  
+    <div class="container">  
+        <div class="footer-grid">  
+            <div class="footer-brand">  
+                <a href="Index.html" class="footer-logo">  
+                    <img src="Images/Logo.png" alt="RAVION">  
+                </a>  
+                <p>Premium men's fashion brand offering high-quality essentials. Built for modern men who value style, comfort, and confidence.</p>  
+            </div>  
+            <div class="footer-col">  
+                <h4>Shop</h4>  
+                <ul>  
+                    <li><a href="products.html">All Products</a></li>  
+                    <li><a href="products.html">Polo Shirts</a></li>  
+                    <li><a href="products.html">Jackets</a></li>  
+                    <li><a href="products.html">Bags</a></li>  
+                    <li><a href="products.html">Jeans</a></li>  
+                    <li><a href="products.html">Office Wear</a></li>  
+                </ul>  
+            </div>  
+            <div class="footer-col">  
+                <h4>Help</h4>  
+                <ul>  
+                    <li><a href="contact.html">Contact Us</a></li>  
+                    <li><a href="feedback.html">Give Feedback</a></li>  
+                    <li><a href="pricing.html">Membership</a></li>  
+                    <li><a href="testimonials.html">Reviews</a></li>  
+                    <li><a href="profile.html">My Account</a></li>  
+                </ul>  
+            </div>  
+            <div class="footer-col">  
+                <h4>Contact</h4>  
+                <ul class="footer-contact">  
+                    <li>  
+                        <span class="contact-icon">&#9993;</span>  
+                        <span>info@ravion.in</span>  
+                    </li>  
+                    <li>  
+                        <span class="contact-icon">&#9742;</span>  
+                        <span>+91 98765 43210</span>  
+                    </li>  
+                    <li>  
+                        <span class="contact-icon">&#9906;</span>  
+                        <span>Chandigarh, India</span>  
+                    </li>  
+                </ul>  
+            </div>  
+        </div>  
+        <div class="footer-bottom">  
+            <p>&copy; 2025 RAVION. All Rights Reserved.</p>  
+            <div class="social-links">  
+                <a href="#">Instagram</a>  
+                <a href="#">Twitter</a>  
+                <a href="#">Facebook</a>  
+                <a href="#">YouTube</a>  
+            </div>  
+        </div>  
+    </div>  
+</footer>
+
+</body>  
+</html>  

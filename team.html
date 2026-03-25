@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About RAVION - Our Story & Team</title>
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <!-- ==========================================
+    PAGE-SPECIFIC STYLES
+    
+    Team page is the BRAND IDENTITY page.
+    It tells the RAVION story, shows values,
+    introduces the founders, and creates 
+    emotional connection with visitors.
+    =========================================== -->
+    <style>
+        /* Story hero section */
+        .story-hero {
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background-image: url('Images/hero-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            margin-top: 70px;
+        }
+
+        .story-hero .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1;
+        }
+
+        .story-hero .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            padding: 0 25px;
+        }
+
+        .story-hero h1 {
+            font-size: 3rem;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .story-hero .hero-tagline {
+            font-size: 0.9rem;
+            color: var(--gold);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin: 0 auto;
+            max-width: none;
+        }
+
+        /* Story narrative section */
+        .story-narrative {
+            max-width: 750px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .story-narrative p {
+            font-size: 1rem;
+            color: var(--light-gray);
+            line-height: 2;
+            margin: 0 auto 25px auto;
+            max-width: none;
+            font-weight: 300;
+        }
+
+        .story-narrative .story-highlight {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--white);
+            font-style: italic;
+            line-height: 1.8;
+            margin: 40px auto;
+            padding: 30px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            letter-spacing: 1px;
+        }
+
+        .story-narrative .story-end {
+            font-size: 0.85rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 500;
+            margin-top: 35px;
+        }
+
+        /* Mission section */
+        .mission-section {
+            position: relative;
+            padding: 100px 0;
+            background-image: url('Images/gallery4.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .mission-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+        }
+
+        .mission-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .mission-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .mission-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--white);
+            line-height: 1.8;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin: 0 auto;
+            max-width: none;
+        }
+
+        /* Values grid */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .value-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 40px 30px;
+            transition: border-color 0.3s ease;
+            position: relative;
+        }
+
+        .value-card:hover {
+            border-color: var(--gold);
+        }
+
+        .value-card .value-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--border);
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .value-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .value-card p {
+            font-size: 0.82rem;
+            color: var(--gray);
+            line-height: 1.8;
+            margin: 0;
+            max-width: none;
+        }
+
+        /* Enhanced team cards */
+        .team-section-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 50px;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .team-member {
+            text-align: center;
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 50px 30px 40px 30px;
+            transition: border-color 0.3s ease;
+        }
+
+        .team-member:hover {
+            border-color: var(--gold);
+        }
+
+        .team-member .member-photo {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 25px auto;
+            border: 3px solid var(--border);
+            transition: border-color 0.5s ease;
+        }
+
+        .team-member:hover .member-photo {
+            border-color: var(--gold);
+        }
+
+        .team-member .member-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .team-member:hover .member-photo img {
+            transform: scale(1.05);
+        }
+
+        .team-member h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .team-member .member-role {
+            font-size: 0.72rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            margin-bottom: 18px;
+            font-weight: 500;
+        }
+
+        .team-member .member-bio {
+            font-size: 0.8rem;
+            color: var(--gray);
+            line-height: 1.8;
+            margin: 0 auto;
+            max-width: none;
+        }
+
+        .team-member .member-social {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .team-member .member-social a {
+            width: 35px;
+            height: 35px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: var(--gray);
+            transition: all 0.3s ease;
+        }
+
+        .team-member .member-social a:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* Timeline section */
+        .timeline {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            padding-left: 40px;
+        }
+
+        /* Vertical gold line */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            padding-left: 25px;
+        }
+
+        /* Gold dot on timeline */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--gold);
+            border: 3px solid var(--dark);
+        }
+
+        .timeline-item .timeline-year {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .timeline-item h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+        }
+
+        .timeline-item p {
+            font-size: 0.78rem;
+            color: var(--gray);
+            line-height: 1.7;
+            margin: 0;
+            max-width: none;
+        }
+
+        /* Join team CTA */
+        .join-cta {
+            background: var(--card);
+            border: 1px solid var(--gold);
+            padding: 50px 40px;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .join-cta h3 {
+            font-size: 1.3rem;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .join-cta p {
+            font-size: 0.82rem;
+            color: var(--gray);
+            margin: 0 auto 25px auto;
+            max-width: none;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 768px) {
+            .story-hero {
+                height: 60vh;
+            }
+
+            .story-hero h1 {
+                font-size: 2rem;
+                letter-spacing: 6px;
+            }
+
+            .story-narrative p {
+                font-size: 0.9rem;
+            }
+
+            .story-narrative .story-highlight {
+                font-size: 1.1rem;
+            }
+
+            .mission-text {
+                font-size: 1.2rem;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-section-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+
+            .timeline {
+                padding-left: 35px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .story-hero {
+                height: 50vh;
+            }
+
+            .story-hero h1 {
+                font-size: 1.6rem;
+                letter-spacing: 4px;
+            }
+
+            .story-narrative p {
+                font-size: 0.85rem;
+                line-height: 1.8;
+            }
+
+            .story-narrative .story-highlight {
+                font-size: 1rem;
+                padding: 20px 0;
+            }
+
+            .mission-text {
+                font-size: 1rem;
+            }
+
+            .team-member {
+                padding: 35px 20px 30px 20px;
+            }
+
+            .team-member .member-photo {
+                width: 140px;
+                height: 140px;
+            }
+
+            .value-card {
+                padding: 30px 20px;
+            }
+
+            .value-card .value-number {
+                font-size: 2rem;
+            }
+
+            .join-cta {
+                padding: 35px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <input type="checkbox" id="menu-checkbox">
+    <nav class="navbar">
+        <div class="container">
+            <a href="Index.html" class="logo">
+                <img src="Images/Logo.png" alt="RAVION">
+            </a>
+            <ul class="nav-links">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="pricing.html">Membership</a></li>
+                <li><a href="team.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="search.html">&#x1F50D;</a>
+                <a href="wishlist.html">&#x2661;</a>
+                <a href="cart.html">&#x1F6D2;</a>
+                <a href="login.html">&#x263A;</a>
+                <label for="menu-checkbox" class="menu-toggle">&#9776;</label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="Index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="pricing.html">Membership</a>
+        <a href="team.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="testimonials.html">Reviews</a>
+        <a href="search.html">Search</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+
+    <!-- ==========================================
+    STORY HERO
+    
+    Cinematic full-screen opening.
+    Sets the tone: this is about WHO we are,
+    not just WHAT we sell.
+    =========================================== -->
+
+    <section class="story-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Our Story</h1>
+            <p class="hero-tagline">Built from hunger. Driven by identity.</p>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    THE RAVION STORY
+    
+    This is YOUR story. Your words.
+    Written like a letter to the customer.
+    Creates deep emotional connection.
+    
+    This is what separates RAVION from 
+    every other clothing brand.
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="story-narrative">
+
+                <div class="gold-line" style="margin-bottom: 40px;"></div>
+
+                <p>Ravion wasn't born out of luxury.</p>
+
+                <p>It was built from the hunger to create it.</p>
+
+                <p>In a world full of noise, trends, and fast fashion, there was a gap — something felt missing. Clothing had become common, but identity had become rare. Ravion was created to bring that identity back.</p>
+
+                <p>What started as a simple idea — to design something clean and meaningful — slowly turned into a mindset. A belief that a man doesn't need to be loud to be noticed. That real presence comes from subtle confidence, from how you carry yourself, from what you choose to wear when no one is watching.</p>
+
+                <p class="story-highlight">
+                    "Every piece you see is a reflection of that journey. From limited beginnings to a brand with purpose — Ravion stands for those who are building themselves, quietly but powerfully."
+                </p>
+
+                <p>This is not just fashion.</p>
+
+                <p class="story-end">This is self-respect, worn daily.</p>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    MISSION SECTION
+    
+    Full-width cinematic background.
+    One powerful mission statement.
+    Minimal. Clean. Impactful.
+    =========================================== -->
+
+    <section class="mission-section">
+        <div class="container">
+            <div class="mission-content">
+                <p class="mission-label">Our Mission</p>
+                <div class="gold-line" style="margin-bottom: 25px;"></div>
+                <p class="mission-text">
+                    To create timeless menswear that blends simplicity, strength, and confidence — without compromising on quality or accessibility. Ravion exists to make premium feel natural, not forced.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    BRAND VALUES
+    
+    4 core values that define RAVION.
+    Each card has a faded number in background
+    for visual depth. Gold heading. Gray text.
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>What We Stand For</h2>
+                <div class="gold-line"></div>
+            </div>
+
+            <div class="values-grid">
+
+                <!-- Value 1 -->
+                <div class="value-card">
+                    <span class="value-number">01</span>
+                    <h3>Quiet Confidence</h3>
+                    <p>We believe real style doesn't shout. It speaks with presence. Every RAVION piece is designed to make you feel powerful without trying too hard.</p>
+                </div>
+
+                <!-- Value 2 -->
+                <div class="value-card">
+                    <span class="value-number">02</span>
+                    <h3>Timeless Over Trend</h3>
+                    <p>We don't chase moments. We build pieces that last beyond them. RAVION designs are meant to stay relevant season after season, year after year.</p>
+                </div>
+
+                <!-- Value 3 -->
+                <div class="value-card">
+                    <span class="value-number">03</span>
+                    <h3>Discipline &amp; Consistency</h3>
+                    <p>Great brands aren't created overnight — they are built daily. Every stitch, every fabric choice, every design decision reflects our commitment to excellence.</p>
+                </div>
+
+                <!-- Value 4 -->
+                <div class="value-card">
+                    <span class="value-number">04</span>
+                    <h3>Accessible Luxury</h3>
+                    <p>Premium isn't about price. It's about feeling — and everyone deserves it. RAVION brings luxury-level quality at prices that respect your wallet.</p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    THE TEAM
+    
+    The founders of RAVION.
+    Photo + Name + Role + Bio + Social links.
+    
+    These are YOUR words, YOUR bios.
+    This makes RAVION feel REAL.
+    =========================================== -->
+
+    <section class="section section-dark">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>The Minds Behind RAVION</h2>
+                <div class="gold-line"></div>
+                <p>Two visions. One purpose.</p>
+            </div>
+
+            <div class="team-section-grid">
+
+                <!-- FOUNDER: Armaanpreet Singh Sandhu -->
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="Images/Teammember-01.jpg" alt="Armaanpreet Singh Sandhu">
+                    </div>
+                    <h3>Armaanpreet Singh Sandhu</h3>
+                    <p class="member-role">Founder &amp; Creative Director</p>
+                    <p class="member-bio">
+                        Ravion started as a vision to turn simplicity into identity. Armaanpreet believes fashion is not just clothing — it's how a man presents his confidence without speaking. Every design reflects his mindset: clean, powerful, and timeless, built for those who want to stand out without trying too hard.
+                    </p>
+                    <div class="member-social">
+                        <a href="https://www.instagram.com/armaan.o1?igsh=MTd6eGY1dzd6Y2MwMA==" title="Instagram">&#x1F4F7;</a>
+                        <a href="#" title="LinkedIn">&#x1F310;</a>
+                        <a href="#" title="Twitter">&#x1F426;</a>
+                    </div>
+                </div>
+
+                <!-- CO-FOUNDER: Aman Sandhu -->
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="Images/Teammember-02.jpg" alt="Aman Sandhu">
+                    </div>
+                    <h3>Aman Sandhu</h3>
+                    <p class="member-role">Co-Founder</p>
+                    <p class="member-bio">
+                        Aman brings balance to the brand with a sharp focus on growth and execution. Where ideas begin, he builds systems to make them real. His approach is simple — keep improving, keep moving, and make sure every customer feels the value behind Ravion.
+                    </p>
+                    <div class="member-social">
+                        <a href="#" title="Instagram">&#x1F4F7;</a>
+                        <a href="#" title="LinkedIn">&#x1F310;</a>
+                        <a href="#" title="Twitter">&#x1F426;</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    COMPANY TIMELINE
+    
+    Visual timeline of RAVION's journey.
+    Gold dots on a vertical line.
+    Shows growth and milestones.
+    Creates sense of progress and ambition.
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>The Journey</h2>
+                <div class="gold-line"></div>
+                <p>From idea to identity</p>
+            </div>
+
+            <div class="timeline">
+
+                <!-- Milestone 1 -->
+                <div class="timeline-item">
+                    <div class="timeline-year">2024</div>
+                    <h4>The Spark</h4>
+                    <p>The idea of RAVION was born. Two friends with one shared frustration — why does premium menswear have to cost a fortune? The journey began with sketches, research, and a relentless hunger to build something meaningful.</p>
+                </div>
+
+                <!-- Milestone 2 -->
+                <div class="timeline-item">
+                    <div class="timeline-year">2024</div>
+                    <h4>First Collection</h4>
+                    <p>RAVION launched its debut collection — polo shirts, jackets, and bags. The response was immediate. Customers loved the quality, the fit, and most importantly, the price point. The brand found its audience.</p>
+                </div>
+                <!-- Milestone 3 -->
+                <div class="timeline-item">
+                    <div class="timeline-year">2024</div>
+                    <h4>Building the Community</h4>
+                    <p>Word spread. Social media grew. Repeat customers became brand ambassadors. RAVION wasn't just selling clothes — it was building a community of modern men who valued quiet confidence.</p>
+                </div>
+
+                <!-- Milestone 4 -->
+                <div class="timeline-item">
+                    <div class="timeline-year">2025</div>
+                    <h4>5,000+ Happy Customers</h4>
+                    <p>A milestone that proved the vision was right. Thousands of men across India now trust RAVION for their daily, office, and street style needs. New categories launched: jeans, streetwear, and office wear.</p>
+                </div>
+
+                <!-- Milestone 5 -->
+                <div class="timeline-item">
+                    <div class="timeline-year">2025</div>
+                    <h4>The Future</h4>
+                    <p>RAVION is just getting started. Expanding to new cities, launching exclusive membership plans, and continuing to prove that premium fashion doesn't need a premium price tag. The best is yet to come.</p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    JOIN THE TEAM CTA
+    
+    Hiring/careers section.
+    Creates sense that RAVION is growing.
+    Professional touch.
+    =========================================== -->
+
+    <section class="section section-dark">
+        <div class="container">
+
+            <div class="join-cta">
+                <h3>Join the RAVION Team</h3>
+                <div class="gold-line"></div>
+                <p>We're always looking for passionate people who believe in the power of great design and authentic branding. If you think you can add value to our journey, we'd love to hear from you.</p>
+                <a href="contact.html" class="btn btn-gold">Get in Touch</a>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="Index.html" class="footer-logo">
+                        <img src="Images/Logo.png" alt="RAVION">
+                    </a>
+                    <p>Premium men's fashion brand offering high-quality essentials. Built for modern men who value style, comfort, and confidence.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="products.html">All Products</a></li>
+                        <li><a href="products.html">Polo Shirts</a></li>
+                        <li><a href="products.html">Jackets</a></li>
+                        <li><a href="products.html">Bags</a></li>
+                        <li><a href="products.html">Jeans</a></li>
+                        <li><a href="products.html">Office Wear</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Help</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="feedback.html">Give Feedback</a></li>
+                        <li><a href="pricing.html">Membership</a></li>
+                        <li><a href="testimonials.html">Reviews</a></li>
+                        <li><a href="profile.html">My Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                  <h4>Contact</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <span class="contact-icon">&#9993;</span>
+                            <span>info@ravion.in</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9742;</span>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9906;</span>
+                            <span>Chandigarh, India</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 RAVION. All Rights Reserved.</p>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

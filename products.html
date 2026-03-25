@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Collection - RAVION</title>
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <!-- ==========================================
+    PAGE-SPECIFIC STYLES
+    
+    Products page has unique elements:
+    - Top sale strip
+    - Filter bar
+    - Product count info
+    - Sort dropdown
+    =========================================== -->
+    <style>
+        /* Sale strip at very top (below navbar) */
+        .sale-strip {
+            background: var(--gold);
+            text-align: center;
+            padding: 10px 20px;
+            margin-top: 70px;
+        }
+
+        .sale-strip p {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--black);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            max-width: none;
+            margin: 0;
+        }
+
+        /* Shop controls bar (count + sort) */
+        .shop-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .product-count {
+            font-size: 0.8rem;
+            color: var(--gray);
+            letter-spacing: 1px;
+        }
+
+        .sort-select {
+            padding: 10px 15px;
+            background: var(--dark);
+            border: 1px solid var(--border);
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .sort-select:focus {
+            border-color: var(--gold);
+        }
+
+        /* Page header adjusted for sale strip */
+        .products-page .page-header {
+            padding-top: 60px;
+        }
+
+        /* Category description under header */
+        .category-description {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            padding-top: 10px;
+        }
+
+        .category-description p {
+            font-size: 0.82rem;
+            color: var(--gray);
+            margin: 0 auto;
+            max-width: none;
+        }
+
+        /* Quick offer cards above products */
+        .offer-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 50px;
+        }
+
+        .offer-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 20px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+
+        .offer-card:hover {
+            border-color: var(--gold);
+        }
+
+        .offer-card .offer-icon {
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .offer-card h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 5px;
+        }
+
+        .offer-card p {
+            font-size: 0.72rem;
+            color: var(--gray);
+            margin: 0;
+            max-width: none;
+        }
+
+        @media (max-width: 768px) {
+            .shop-controls {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .offer-cards {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sale-strip p {
+                font-size: 0.6rem;
+                letter-spacing: 2px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <input type="checkbox" id="menu-checkbox">
+    <nav class="navbar">
+        <div class="container">
+            <a href="Index.html" class="logo">
+                <img src="Images/Logo.png" alt="RAVION">
+            </a>
+            <ul class="nav-links">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="pricing.html">Membership</a></li>
+                <li><a href="team.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="search.html">&#x1F50D;</a>
+                <a href="wishlist.html">&#x2661;</a>
+                <a href="cart.html">&#x1F6D2;</a>
+                <a href="login.html">&#x263A;</a>
+                <label for="menu-checkbox" class="menu-toggle">&#9776;</label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="Index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="pricing.html">Membership</a>
+        <a href="team.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="testimonials.html">Reviews</a>
+        <a href="search.html">Search</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+
+    <!-- ==========================================
+    SALE STRIP
+    
+    Thin gold bar announcing current sale.
+    Sits right below navbar.
+    Creates urgency. Premium brands like 
+    Zara and H&M use this technique.
+    =========================================== -->
+
+    <div class="sale-strip">
+        <p>&#9733; Season Sale Live — Flat 40% Off on First Order — Use Code: RAVION40 &#9733;</p>
+    </div>
+
+
+    <!-- PAGE HEADER -->
+    <section class="page-header products-page">
+        <div class="container">
+            <h1>Shop Collection</h1>
+            <p>Premium essentials for the modern man</p>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    MAIN SHOP SECTION
+    
+    Contains:
+    1. Offer cards (3 quick benefit cards)
+    2. Filter buttons (category filters)
+    3. Shop controls (count + sort)
+    4. Product grid (ALL products)
+    5. Load more button
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <!-- ============================
+            OFFER CARDS
+            
+            3 small cards showing delivery, 
+            return, and payment benefits.
+            Builds trust before user browses.
+            ============================ -->
+            <div class="offer-cards">
+                <div class="offer-card">
+                    <div class="offer-icon">&#x27A4;</div>
+                    <h4>Free Delivery</h4>
+                    <p>On orders above ₹999</p>
+                </div>
+                <div class="offer-card">
+                    <div class="offer-icon">&#x21BA;</div>
+                    <h4>Easy Returns</h4>
+                    <p>30-day return policy</p>
+                </div>
+                <div class="offer-card">
+                    <div class="offer-icon">&#x2726;</div>
+                    <h4>Secure Payment</h4>
+                    <p>100% safe checkout</p>
+                </div>
+            </div>
+
+
+            <!-- ============================
+            FILTER BUTTONS
+            
+            Category filter bar.
+            "All" is active by default.
+            Without JavaScript, these don't 
+            actually filter. But they LOOK 
+            professional.
+            
+            .active class = gold filled
+            Others = outlined
+            ============================ -->
+            <div class="filter-bar">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Polo</button>
+                <button class="filter-btn">Shirts</button>
+                <button class="filter-btn">T-Shirts</button>
+                <button class="filter-btn">Jackets</button>
+                <button class="filter-btn">Bags</button>
+                <button class="filter-btn">Jeans</button>
+                <button class="filter-btn">Streetwear</button>
+                <button class="filter-btn">Office Wear</button>
+            </div>
+
+
+            <!-- Shop Controls: count + sort -->
+            <div class="shop-controls">
+                <span class="product-count">Showing 16 products</span>
+                <select class="sort-select">
+                    <option>Sort by: Featured</option>
+                    <option>Price: Low to High</option>
+                    <option>Price: High to Low</option>
+                    <option>Newest First</option>
+                    <option>Rating</option>
+                </select>
+            </div>
+
+
+            <!-- ============================
+            PRODUCT GRID
+            
+            THIS IS WHERE ALL PRODUCTS LIVE.
+            
+            Each product is a .product-card
+            Inside it:
+            1. .product-image (photo + badges)
+            2. .product-info (name + price + buttons)
+            
+            I will mark WHERE to add/edit/delete
+            products with clear comments.
+            
+            TOTAL: 16 products (2 per category + extras)
+            ============================ -->
+
+            <div class="product-grid">
+
+
+                <!-- ═══════════════════════════
+                PRODUCT 1: Classic Pique Polo
+                Category: Polo
+                Image: product-polo.jpg
+                Price: ₹799 (was ₹1,299)
+                Badge: SALE
+                ═══════════════════════════ -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-polo.jpg" alt="Classic Pique Polo">
+                        <span class="sale-badge">Sale</span>
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Polo</p>
+                        <h3>Classic Pique Polo</h3>
+                        <div class="price">
+                            <span class="current">&#8377;799</span>
+                            <span class="old">&#8377;1,299</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════
+                PRODUCT 2: Urban Leather Jacket
+                Category: Jacket
+                Image: product-jacket.jpg
+                Price: ₹2,499 (was ₹2,999)
+                Badge: None
+                ═══════════════════════════ -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-jacket.jpg" alt="Urban Leather Jacket">
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Jacket</p>
+                        <h3>Urban Leather Jacket</h3>
+                        <div class="price">
+                            <span class="current">&#8377;2,499</span>
+                            <span class="old">&#8377;2,999</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════
+                PRODUCT 3: Premium Cotton Tee
+                Category: T-Shirt
+                Image: product-tshirt.jpg
+                Price: ₹599 (was ₹999)
+                Badge: NEW
+                ═══════════════════════════ -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-tshirt.jpg" alt="Premium Cotton Tee">
+                        <span class="sale-badge">New</span>
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">T-Shirt</p>
+                        <h3>Premium Cotton Tee</h3>
+                        <div class="price">
+                            <span class="current">&#8377;599</span>
+                            <span class="old">&#8377;999</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════
+                PRODUCT 4: Executive Leather Bag
+                Category: Bags
+                Image: product-bag.jpg
+                Price: ₹1,499 (was ₹1,999)
+                Badge: None
+                ═══════════════════════════ -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-bag.jpg" alt="Executive Leather Bag">
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Bags</p>
+                        <h3>Executive Leather Bag</h3>
+                        <div class="price">
+                            <span class="current">&#8377;1,499</span>
+                            <span class="old">&#8377;1,999</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════
+                PRODUCT 5: Slim Fit Dark Jeans
+                Category: Jeans
+                Image: product-jeans.jpg
+                Price: ₹999 (was ₹1,499)
+                Badge: -30%
+                ═══════════════════════════ -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-jeans.jpg" alt="Slim Fit Dark Jeans">
+                        <span class="sale-badge">-30%</span>
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Jeans</p>
+                        <h3>Slim Fit Dark Jeans</h3>
+                        <div class="price">
+                            <span class="current">&#8377;999</span>
+                            <span class="old">&#8377;1,499</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════
+                PRODUCT 6: Oversized Street Hoodie
+                Category: Streetwear
+                Image: product-streetwear.jpg
+                Price: ₹1,299 (was ₹1,799)
+                Badge: HOT
+                ═══════════════════════════ -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-streetwear.jpg" alt="Oversized Street Hoodie">
+                        <span class="sale-badge">Hot</span>
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Streetwear</p>
+                        <h3>Oversized Street Hoodie</h3>
+                        <div class="price">
+                            <span class="current">&#8377;1,299</span>
+                            <span class="old">&#8377;1,799</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════
+                PRODUCT 7: Oxford Formal Shirt
+                Category: Office Wear
+                Image: product-office.jpg
+                Price: ₹1,199 (was ₹1,699)
+                Badge: None
+                ═══════════════════════════ -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-office.jpg" alt="Oxford Formal Shirt">
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Office Wear</p>
+                        <h3>Oxford Formal Shirt</h3>
+                        <div class="price">
+                            <span class="current">&#8377;1,199</span>
+                            <span class="old">&#8377;1,699</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════
+                PRODUCT 8: Casual Linen Shirt
+                Category: Shirts
+                Image: product-shirt.jpg
+                Price: ₹899 (was ₹1,299)
+                Badge: SALE
+                ═══════════════════════════ -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-shirt.jpg" alt="Casual Linen Shirt">
+                        <span class="sale-badge">Sale</span>
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Shirts</p>
+                        <h3>Casual Linen Shirt</h3>
+                        <div class="price">
+                            <span class="current">&#8377;899</span>
+                            <span class="old">&#8377;1,299</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════
+                PRODUCT 9: Textured Polo
+Category: Polo  
+            Image: product-polo.jpg (reused)  
+            Price: ₹999 (was ₹1,499)  
+            Badge: None  
+            ═══════════════════════════ -->  
+            <div class="product-card">  
+                <div class="product-image">  
+                    <img src="Images/product-polo.jpg" alt="Textured Polo">  
+                    <span class="wishlist-icon">&#x2661;</span>  
+                </div>  
+                <div class="product-info">  
+                    <p class="category">Polo</p>  
+                    <h3>Textured Knit Polo</h3>  
+                    <div class="price">  
+                        <span class="current">&#8377;999</span>  
+                        <span class="old">&#8377;1,499</span>  
+                    </div>  
+                    <div class="product-actions">  
+                        <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>  
+                        <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>  
+                    </div>  
+                </div>  
+            </div>  
+
+
+            <!-- ═══════════════════════════  
+            PRODUCT 10: Bomber Jacket  
+            Category: Jacket  
+            Image: product-jacket.jpg (reused)  
+            Price: ₹1,999 (was ₹2,499)  
+            Badge: -20%  
+            ═══════════════════════════ -->  
+            <div class="product-card">  
+                <div class="product-image">  
+                    <img src="Images/product-jacket.jpg" alt="Bomber Jacket">  
+                    <span class="sale-badge">-20%</span>  
+                    <span class="wishlist-icon">&#x2661;</span>  
+                </div>  
+                <div class="product-info">  
+                    <p class="category">Jacket</p>  
+                    <h3>Classic Bomber Jacket</h3>  
+                    <div class="price">  
+                        <span class="current">&#8377;1,999</span>  
+                        <span class="old">&#8377;2,499</span>  
+                    </div>  
+                    <div class="product-actions">  
+                        <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>  
+                        <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>  
+                    </div>  
+                </div>  
+            </div>  
+
+
+            <!-- ═══════════════════════════  
+            PRODUCT 11: Cargo Trousers  
+            Category: Jeans  
+            Image: product-jeans.jpg (reused)  
+            Price: ₹1,199 (was ₹1,799)  
+            Badge: NEW  
+            ═══════════════════════════ -->  
+            <div class="product-card">  
+                <div class="product-image">  
+                    <img src="Images/product-jeans.jpg" alt="Cargo Trousers">  
+                    <span class="sale-badge">New</span>  
+                    <span class="wishlist-icon">&#x2661;</span>  
+                </div>  
+                <div class="product-info">  
+                    <p class="category">Jeans &amp; Trousers</p>  
+                    <h3>Tactical Cargo Trousers</h3>  
+                    <div class="price">  
+                        <span class="current">&#8377;1,199</span>  
+                        <span class="old">&#8377;1,799</span>  
+                    </div>  
+                    <div class="product-actions">  
+                        <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>  
+                        <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>  
+                    </div>  
+                </div>  
+            </div>  
+
+
+            <!-- ═══════════════════════════  
+            PRODUCT 12: Laptop Backpack  
+            Category: Bags  
+            Image: product-bag.jpg (reused)  
+            Price: ₹1,799 (was ₹2,499)  
+            Badge: Sale  
+            ═══════════════════════════ -->  
+            <div class="product-card">  
+                <div class="product-image">  
+                    <img src="Images/product-bag.jpg" alt="Laptop Backpack">  
+                    <span class="sale-badge">Sale</span>  
+                    <span class="wishlist-icon">&#x2661;</span>  
+                </div>  
+                <div class="product-info">  
+                    <p class="category">Bags</p>  
+                    <h3>Urban Laptop Backpack</h3>  
+                    <div class="price">  
+                        <span class="current">&#8377;1,799</span>  
+                        <span class="old">&#8377;2,499</span>  
+                    </div>  
+                    <div class="product-actions">  
+                        <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>  
+                        <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>  
+                    </div>  
+                </div>  
+            </div>  
+
+
+            <!-- ═══════════════════════════  
+            PRODUCT 13: Graphic Street Tee  
+            Category: Streetwear  
+            Image: product-streetwear.jpg (reused)  
+            Price: ₹699 (was ₹999)  
+            Badge: None  
+            ═══════════════════════════ -->  
+            <div class="product-card">  
+                <div class="product-image">  
+                    <img src="Images/product-streetwear.jpg" alt="Graphic Street Tee">  
+                    <span class="wishlist-icon">&#x2661;</span>  
+                </div>  
+                <div class="product-info">  
+                    <p class="category">Streetwear</p>  
+                    <h3>Graphic Street Tee</h3>  
+                    <div class="price">  
+                        <span class="current">&#8377;699</span>  
+                        <span class="old">&#8377;999</span>  
+                    </div>  
+                    <div class="product-actions">  
+                        <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>  
+                        <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>  
+                    </div>  
+                </div>  
+            </div>  
+
+
+            <!-- ═══════════════════════════  
+            PRODUCT 14: Slim Formal Trousers  
+            Category: Office Wear  
+            Image: product-office.jpg (reused)  
+            Price: ₹1,499 (was ₹2,199)  
+            Badge: -30%  
+            ═══════════════════════════ -->  
+            <div class="product-card">  
+                <div class="product-image">  
+                    <img src="Images/product-office.jpg" alt="Slim Formal Trousers">  
+                    <span class="sale-badge">-30%</span>  
+                    <span class="wishlist-icon">&#x2661;</span>  
+                </div>  
+                <div class="product-info">  
+                    <p class="category">Office Wear</p>  
+                    <h3>Slim Formal Trousers</h3>  
+                    <div class="price">  
+                        <span class="current">&#8377;1,499</span>  
+                        <span class="old">&#8377;2,199</span>  
+                    </div>  
+                    <div class="product-actions">  
+                        <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>  
+                        <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>  
+                    </div>  
+                </div>  
+            </div>  
+
+
+            <!-- ═══════════════════════════  
+            PRODUCT 15: V-Neck Undershirt  
+            Category: T-Shirt  
+            Image: product-tshirt.jpg (reused)  
+            Price: ₹499 (no old price)  
+            Badge: None  
+            ═══════════════════════════ -->  
+            <div class="product-card">  
+                <div class="product-image">  
+                    <img src="Images/product-tshirt.jpg" alt="V-Neck Undershirt">  
+                    <span class="wishlist-icon">&#x2661;</span>  
+                </div>  
+                <div class="product-info">  
+                    <p class="category">T-Shirt</p>  
+                    <h3>Essential V-Neck Tee</h3>  
+                    <div class="price">  
+                        <span class="current">&#8377;499</span>  
+                    </div>  
+                    <div class="product-actions">  
+                        <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>  
+                        <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>  
+                    </div>  
+                </div>  
+            </div>  
+
+
+            <!-- ═══════════════════════════  
+            PRODUCT 16: Mandarin Collar Shirt  
+            Category: Shirts  
+            Image: product-shirt.jpg (reused)  
+            Price: ₹1,099 (was ₹1,599)  
+            Badge: HOT  
+            ═══════════════════════════ -->  
+            <div class="product-card">  
+                <div class="product-image">  
+                    <img src="Images/product-shirt.jpg" alt="Mandarin Collar Shirt">  
+                    <span class="sale-badge">Hot</span>  
+                    <span class="wishlist-icon">&#x2661;</span>  
+                </div>  
+                <div class="product-info">  
+                    <p class="category">Shirts</p>  
+                    <h3>Mandarin Collar Shirt</h3>  
+                    <div class="price">  
+                        <span class="current">&#8377;1,099</span>  
+                        <span class="old">&#8377;1,599</span>  
+                    </div>  
+                    <div class="product-actions">  
+                        <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>  
+                        <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>  
+                    </div>  
+                </div>  
+            </div>  
+
+
+            <!-- ═════════════════════════

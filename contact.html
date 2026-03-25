@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - RAVION</title>
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <!-- ==========================================
+    PAGE-SPECIFIC STYLES
+    
+    Contact page has unique elements:
+    - Two column: Form left, Info right
+    - Google Maps embed
+    - Contact info cards
+    - WhatsApp button
+    - Business hours display
+    - Response time badge
+    =========================================== -->
+    <style>
+        /* Contact layout: form + info side by side */
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 40px;
+        }
+
+        /* Contact info cards */
+        .info-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 25px;
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            transition: border-color 0.3s ease;
+        }
+
+        .info-card:hover {
+            border-color: var(--gold);
+        }
+
+        .info-card .info-icon {
+            width: 45px;
+            height: 45px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+
+        .info-card h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+        }
+
+        .info-card p {
+            font-size: 0.82rem;
+            color: var(--gray);
+            line-height: 1.6;
+            max-width: none;
+            margin: 0;
+        }
+
+        .info-card a {
+            font-size: 0.82rem;
+            color: var(--gold);
+        }
+
+        /* Business hours */
+        .hours-list {
+            list-style: none;
+            margin-top: 8px;
+        }
+
+        .hours-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.78rem;
+            color: var(--gray);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hours-list li:last-child {
+            border-bottom: none;
+        }
+
+        .hours-list li .day {
+            color: var(--light-gray);
+        }
+
+        .hours-list li .time {
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .hours-list li .closed {
+            color: var(--red);
+        }
+
+        /* WhatsApp button */
+        .whatsapp-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 15px;
+            background: #25D366;
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-decoration: none;
+        }
+
+        .whatsapp-btn:hover {
+            background: #1da851;
+            color: var(--white);
+        }
+
+        .whatsapp-btn .wa-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Response time badge */
+        .response-badge {
+            background: rgba(200, 164, 90, 0.08);
+            border: 1px solid var(--gold);
+            padding: 15px 20px;
+            text-align: center;
+        }
+
+        .response-badge p {
+            font-size: 0.75rem;
+            color: var(--light-gray);
+            margin: 0 auto;
+            max-width: none;
+        }
+
+        .response-badge .response-time {
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* Google Maps embed */
+        .map-section {
+            margin-top: 0;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 400px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            position: relative;
+            background: var(--card);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            filter: grayscale(100%) invert(92%) contrast(83%);
+        }
+
+        /* FAQ mini section */
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .faq-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 30px 25px;
+            transition: border-color 0.3s ease;
+        }
+
+        .faq-card:hover {
+            border-color: var(--gold);
+        }
+
+        .faq-card h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--white);
+        }
+
+        .faq-card p {
+            font-size: 0.78rem;
+            color: var(--gray);
+            line-height: 1.7;
+            margin: 0;
+            max-width: none;
+        }
+
+        /* Contact form success message (visual) */
+        .form-success {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .form-success .success-icon {
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .contact-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .map-container {
+                height: 220px;
+            }
+
+            .info-card {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <input type="checkbox" id="menu-checkbox">
+    <nav class="navbar">
+        <div class="container">
+            <a href="Index.html" class="logo">
+                <img src="Images/Logo.png" alt="RAVION">
+            </a>
+            <ul class="nav-links">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="pricing.html">Membership</a></li>
+                <li><a href="team.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="search.html">&#x1F50D;</a>
+                <a href="wishlist.html">&#x2661;</a>
+                <a href="cart.html">&#x1F6D2;</a>
+                <a href="login.html">&#x263A;</a>
+                <label for="menu-checkbox" class="menu-toggle">&#9776;</label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="Index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="pricing.html">Membership</a>
+        <a href="team.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="testimonials.html">Reviews</a>
+        <a href="search.html">Search</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p>We'd love to hear from you</p>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    CONTACT CONTENT
+    
+    TWO COLUMN LAYOUT:
+    Left: Contact form (name, email, subject, message)
+    Right: Contact info cards + hours + WhatsApp
+    
+    Below: Google Maps + FAQ section
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="contact-layout">
+
+                <!-- ============================
+                LEFT: CONTACT FORM
+                
+                Contains:
+                - Name (first + last side by side)
+                - Email
+                - Phone
+                - Subject dropdown
+                - Message textarea
+                - Submit button
+                ============================ -->
+                <div class="form-card" style="max-width: 100%;">
+
+                    <h2 style="text-align: left; font-size: 1.3rem; letter-spacing: 2px;">Send Us a Message</h2>
+                    <div class="gold-line" style="margin: 15px 0 30px 0;"></div>
+
+                    <form action="contact.html" method="get">
+
+                        <!-- Name row -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contact-fname">First Name</label>
+                                <input 
+                                    type="text" 
+                                    id="contact-fname" 
+                                    name="firstname"
+                                    placeholder="Your first name" 
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-lname">Last Name</label>
+                                <input 
+                                    type="text" 
+                                    id="contact-lname" 
+                                    name="lastname"
+                                    placeholder="Your last name" 
+                                    required>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="contact-email">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="contact-email" 
+                                name="email"
+                                placeholder="your@email.com" 
+                                required>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="form-group">
+                            <label for="contact-phone">Phone Number (Optional)</label>
+                            <input 
+                                type="tel" 
+                                id="contact-phone" 
+                                name="phone"
+                                placeholder="+91 98765 43210">
+                        </div>
+
+                        <!-- Subject Dropdown -->
+                        <div class="form-group">
+                            <label for="contact-subject">Subject</label>
+                            <select id="contact-subject" name="subject" required>
+                                <option value="">Select a subject</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="order">Order Related</option>
+                                <option value="return">Return / Exchange</option>
+                                <option value="product">Product Question</option>
+                                <option value="bulk">Bulk / Corporate Order</option>
+                                <option value="partnership">Partnership / Collaboration</option>
+                                <option value="complaint">Complaint</option>
+                                <option value="feedback">Feedback / Suggestion</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Order ID (optional) -->
+                        <div class="form-group">
+                            <label for="order-id">Order ID (If applicable)</label>
+                            <input 
+                                type="text" 
+                                id="order-id" 
+                                name="order-id"
+                                placeholder="#RAV-XXXX">
+                        </div>
+
+                        <!-- Message -->
+                        <div class="form-group">
+                            <label for="contact-message">Your Message</label>
+                            <textarea 
+                                id="contact-message" 
+                                name="message"
+                                placeholder="Tell us how we can help you..."
+                                required></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-gold btn-full">
+                            Send Message
+                        </button>
+
+                        <p style="text-align: center; font-size: 0.7rem; color: var(--gray); margin-top: 12px; max-width: none;">
+                            By submitting, you agree to our <a href="#" style="font-size: 0.7rem;">Privacy Policy</a>
+                        </p>
+
+                    </form>
+
+                </div>
+
+
+                <!-- ============================
+                RIGHT: CONTACT INFO
+                
+                Contains:
+                1. Response time badge
+                2. Email card
+                3. Phone card
+                4. Address card
+                5. Business hours
+                6. WhatsApp button
+                ============================ -->
+                <div class="info-cards">
+
+                    <!-- Response Time Badge -->
+                    <div class="response-badge">
+                        <p>Average Response Time</p>
+                        <span class="response-time">Within 24 Hours</span>
+                    </div>
+
+                    <!-- Email Card -->
+                    <div class="info-card">
+                        <div class="info-icon">&#9993;</div>
+                        <div>
+                            <h4>Email Us</h4>
+                            <p>For general inquiries and support</p>
+                            <a href="mailto:info@ravion.in">info@ravion.in</a>
+                            <br>
+                            <a href="mailto:orders@ravion.in" style="font-size: 0.78rem;">orders@ravion.in</a>
+                        </div>
+                    </div>
+
+                    <!-- Phone Card -->
+                    <div class="info-card">
+                        <div class="info-icon">&#9742;</div>
+                        <div>
+                            <h4>Call Us</h4>
+                            <p>Monday to Saturday, 10 AM - 7 PM</p>
+                            <a href="tel:+919876543210">+91 98765 43210</a>
+                            <br>
+                            <a href="tel:+911234567890" style="font-size: 0.78rem;">+91 12345 67890</a>
+                        </div>
+                    </div>
+
+                    <!-- Address Card -->
+                    <div class="info-card">
+                        <div class="info-icon">&#9906;</div>
+                        <div>
+                            <h4>Visit Us</h4>
+                            <p>
+                                RAVION HQ<br>
+                                42, Sector 17-C<br>
+                                Chandigarh, Punjab 160017<br>
+                                India
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Business Hours -->
+                    <div class="info-card" style="flex-direction: column;">
+                        <h4 style="margin-bottom: 10px;">Business Hours</h4>
+                        <ul class="hours-list" style="width: 100%;">
+                            <li>
+                                <span class="day">Monday - Friday</span>
+                                <span class="time">10:00 AM - 7:00 PM</span>
+                            </li>
+                            <li>
+                                <span class="day">Saturday</span>
+                                <span class="time">10:00 AM - 4:00 PM</span>
+                            </li>
+                            <li>
+                                <span class="day">Sunday</span>
+                                <span class="closed">Closed</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- WhatsApp Button -->
+                    <a href="https://wa.me/919876543210?text=Hi%20RAVION%2C%20I%20have%20a%20query" class="whatsapp-btn" target="_blank">
+                        <span class="wa-icon">&#x1F4AC;</span>
+                        Chat on WhatsApp
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    GOOGLE MAPS SECTION
+    
+    Embedded Google Map showing Chandigarh.
+    The CSS filter makes the map dark 
+    to match the website theme!
+    
+    filter: grayscale(100%) invert(92%) contrast(83%)
+    This turns the colorful Google Map into 
+    a dark-themed map. CSS magic!
+    =========================================== -->
+
+    <section class="section section-dark map-section">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Find Us</h2>
+                <div class="gold-line"></div>
+                <p>Visit our store in Chandigarh</p>
+            </div>
+
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d109744.22351687822!2d76.68831215820313!3d30.732620700000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390fed0be66ec96b%3A0xa5ff67f9527319fe!2sChandigarh!5e0!3m2!1sen!2sin!4v1707900000000!5m2!1sen!2sin" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    FAQ SECTION
+    
+    Common questions answered quickly.
+    Reduces unnecessary contact messages.
+    Professional customer support approach.
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Frequently Asked Questions</h2>
+                <div class="gold-line"></div>
+                <p>Quick answers to common queries</p>
+            </div>
+
+            <div class="faq-grid">
+
+                <!-- FAQ 1 -->
+                <div class="faq-card">
+                    <h4>How long does delivery take?</h4>
+                    <p>Standard delivery takes 5-7 business days. Premium and VIP members get faster delivery in 3-5 business days. All orders include tracking.</p>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="faq-card">
+                    <h4>What is your return policy?</h4>
+                    <p>We offer a 30-day hassle-free return policy. Items must be unworn with tags attached. Refunds are processed within 5-7 days of receiving the return.</p>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="faq-card">
+                    <h4>Do you offer bulk orders?</h4>
+                    <p>Yes! We offer special pricing for bulk and corporate orders. Contact us with your requirements using the "Bulk / Corporate Order" subject above.</p>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="faq-card">
+                    <h4>How do I track my order?</h4>
+                    <p>Once shipped, you'll receive a tracking link via email and SMS. You can also check order status in your profile under "Recent Orders".</p>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="faq-card">
+                    <h4>What payment methods do you accept?</h4>
+                    <p>We accept Cash on Delivery, Credit/Debit Cards (Visa, Mastercard, Rupay), UPI (Google Pay, PhonePe, Paytm), and Net Banking.</p>
+                </div>
+
+                <!-- FAQ 6 -->
+                <div class="faq-card">
+                    <h4>How do I become a VIP member?</h4>
+                    <p>Visit our Membership page to explore Basic, Premium, and VIP plans. VIP members get exclusive drops, free shipping, and member-only prices.</p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+<!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="Index.html" class="footer-logo">
+                        <img src="Images/Logo.png" alt="RAVION">
+                    </a>
+                    <p>Premium men's fashion brand offering high-quality essentials. Built for modern men who value style, comfort, and confidence.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="products.html">All Products</a></li>
+                        <li><a href="products.html">Polo Shirts</a></li>
+                        <li><a href="products.html">Jackets</a></li>
+                        <li><a href="products.html">Bags</a></li>
+                        <li><a href="products.html">Jeans</a></li>
+                        <li><a href="products.html">Office Wear</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Help</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="feedback.html">Give Feedback</a></li>
+                        <li><a href="pricing.html">Membership</a></li>
+                        <li><a href="testimonials.html">Reviews</a></li>
+                        <li><a href="profile.html">My Account</a></li>
+                    </ul>
+                    </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 RAVION. All Rights Reserved.</p>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

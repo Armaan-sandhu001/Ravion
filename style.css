@@ -1,0 +1,2155 @@
+/* ============================================
+   RAVION - Premium Men's Fashion Brand
+   Complete Design System
+   
+   This ONE file controls ALL 16 pages.
+   Every color, font, spacing, and layout 
+   rule lives here.
+   ============================================ */
+
+
+/* ──────────────────────────────────────────
+   SECTION 1: GOOGLE FONTS
+   
+   WHAT: Loads 2 premium fonts from Google
+   
+   Playfair Display = Luxury serif font
+   Used for: headings, brand name
+   Think of: Gucci, Dior level fonts
+   
+   Montserrat = Clean modern font
+   Used for: body text, buttons, labels
+   Think of: Zara, H&M clean text
+   
+   WHY @import: Tells browser to download 
+   these fonts from internet
+   ────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+
+/* ──────────────────────────────────────────
+   SECTION 2: CSS RESET
+   
+   WHAT: Removes all default browser styling
+   
+   WHY: Every browser (Chrome, Safari etc) 
+   adds its own margins, padding, fonts.
+   We REMOVE all of that so WE control 
+   everything from scratch.
+   
+   * means EVERY element on the page
+   margin: 0 = no outside spacing
+   padding: 0 = no inside spacing
+   box-sizing: border-box = padding doesn't 
+   add extra width to elements
+   ────────────────────────────────────────── */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #0a0a0a;
+    color: #f5f5f5;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 3: COLOR VARIABLES
+   
+   WHAT: We store all colors in variables
+   
+   WHY: If you want to change gold color 
+   later, change it in ONE place here and 
+   it changes EVERYWHERE on all 16 pages.
+   
+   HOW TO USE: var(--gold) in any property
+   
+   EXAMINER ANSWER: "I used CSS custom 
+   properties for maintainable color 
+   management across all pages."
+   ────────────────────────────────────────── */
+
+:root {
+    --black: #0a0a0a;
+    --dark: #111111;
+    --card: #1a1a1a;
+    --border: #2a2a2a;
+    --gold: #c8a45a;
+    --gold-hover: #d4b36a;
+    --gold-dark: #a88a3a;
+    --white: #f5f5f5;
+    --gray: #999999;
+    --light-gray: #cccccc;
+    --red: #c0392b;
+    --green: #27ae60;
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 4: TYPOGRAPHY
+   
+   WHAT: Controls ALL text on the website
+   
+   All headings (h1-h6) use Playfair Display
+   = the luxury serif font
+   
+   letter-spacing = space BETWEEN letters
+   More spacing = more premium/luxury feel
+   
+   rem = responsive unit based on root size
+   2.5rem = 2.5 times the base font size
+   ────────────────────────────────────────── */
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    color: var(--white);
+    letter-spacing: 2px;
+    line-height: 1.3;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+h3 {
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+p {
+    color: var(--gray);
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.8;
+    max-width: 600px;
+}
+
+a {
+    text-decoration: none;
+    color: var(--gold);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--gold-hover);
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 5: CONTAINER
+   
+   WHAT: A wrapper that keeps content 
+   centered and not too wide
+   
+   max-width: 1200px = content won't stretch 
+   beyond 1200px even on 4K screens
+   
+   margin: 0 auto = centers the container
+   (0 top/bottom, auto left/right = centered)
+   
+   padding: 0 20px = 20px gap on left & right
+   so text doesn't touch screen edge on mobile
+   ────────────────────────────────────────── */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 6: NAVIGATION BAR
+   
+   position: fixed = STICKS to top always
+   Even when you scroll, navbar stays visible
+   
+   z-index: 1000 = navbar sits ON TOP of 
+   everything else (higher number = higher layer)
+   
+   backdrop-filter: blur = creates a frosted 
+   glass effect behind the navbar
+   
+   display: flex = puts logo and links in 
+   a horizontal row
+   
+   justify-content: space-between = logo goes 
+   LEFT, links go RIGHT
+   ────────────────────────────────────────── */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 15px 0;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .logo img {
+    height: 40px;
+    width: auto;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    list-style: none;
+}
+
+.nav-links a {
+    color: var(--white);
+    font-size: 0.8rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.nav-links a:hover {
+    color: var(--gold);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.nav-icons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.nav-icons a {
+    color: var(--white);
+    font-size: 0.85rem;
+    transition: color 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 400;
+}
+
+.nav-icons a:hover {
+    color: var(--gold);
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 7: HERO SECTION
+   
+   The FULL SCREEN opening section.
+   This is where your website makes 
+   its FIRST IMPRESSION.
+   
+   height: 100vh = takes FULL screen height
+   (vh = viewport height = screen height)
+   
+   background-size: cover = image stretches 
+   to fill the entire area
+   
+   background-attachment: fixed = image stays 
+   still while content scrolls over it
+   (creates a cinematic parallax effect)
+   ────────────────────────────────────────── */
+
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 0 20px;
+}
+
+.hero-content h1 {
+    font-size: 4.5rem;
+    letter-spacing: 18px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    color: var(--white);
+}
+
+.hero-content .tagline {
+    font-size: 1rem;
+    letter-spacing: 5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin: 0 auto 45px auto;
+    font-weight: 300;
+    max-width: none;
+}
+
+.hero-content .btn {
+    margin-top: 10px;
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 8: BUTTONS
+   
+   .btn = base button styles
+   .btn-gold = filled gold button
+   .btn-outline = gold border only
+   
+   transition: all 0.3s ease = smooth 
+   animation when hovering (0.3 seconds)
+   
+   cursor: pointer = hand icon on hover
+   
+   text-transform: uppercase = ALL CAPS
+   ────────────────────────────────────────── */
+
+.btn {
+    display: inline-block;
+    padding: 15px 45px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.btn-gold {
+    background: var(--gold);
+    color: var(--black);
+}
+
+.btn-gold:hover {
+    background: var(--gold-hover);
+    color: var(--black);
+    box-shadow: 0 0 30px rgba(200, 164, 90, 0.4);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+}
+
+.btn-outline:hover {
+    background: var(--gold);
+    color: var(--black);
+}
+
+.btn-sm {
+    padding: 10px 25px;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+}
+
+.btn-full {
+    width: 100%;
+    display: block;
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 9: SECTIONS & SPACING
+   
+   LUXURY SECRET: More empty space = 
+   more premium feel
+   
+   padding: 100px 0 = 100px top and bottom
+   This creates BREATHING ROOM between 
+   sections. Cheap websites cram everything 
+   together. Premium websites let it breathe.
+   ────────────────────────────────────────── */
+
+.section {
+    padding: 100px 0;
+}
+
+.section-dark {
+    background: var(--dark);
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-title h2 {
+    margin-bottom: 15px;
+}
+
+.section-title p {
+    margin: 0 auto;
+    color: var(--gray);
+}
+
+.gold-line {
+    width: 60px;
+    height: 2px;
+    background: var(--gold);
+    margin: 15px auto;
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 10: PRODUCT CARDS
+   
+   display: grid = creates a grid layout
+   grid-template-columns: repeat(3, 1fr) = 
+   3 equal columns
+   
+   1fr = 1 fraction of available space
+   3 columns each take 1/3 of the space
+   
+   gap: 30px = 30px space between cards
+   
+   overflow: hidden = image zoom doesn't 
+   spill outside the card
+   
+   object-fit: cover = image fills the 
+   container without stretching
+   ────────────────────────────────────────── */
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.product-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--gold);
+}
+
+.product-image {
+    width: 100%;
+    height: 380px;
+    overflow: hidden;
+    position: relative;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.08);
+}
+
+.sale-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: var(--red);
+    color: white;
+    padding: 5px 12px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 2;
+}
+
+.product-info {
+    padding: 22px;
+}
+
+.product-info h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+}
+
+.product-info .category {
+    font-size: 0.7rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+}
+
+.price {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.price .current {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.price .old {
+    font-size: 0.85rem;
+    color: var(--gray);
+    text-decoration: line-through;
+}
+
+.product-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.product-actions .btn {
+    flex: 1;
+    padding: 10px;
+    font-size: 0.65rem;
+    letter-spacing: 1.5px;
+}
+
+.wishlist-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 38px;
+    height: 38px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.wishlist-icon:hover {
+    color: var(--red);
+    border-color: var(--red);
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 11: CATEGORY CARDS
+   
+   Used on home page to show categories
+   like Polo, Jackets, Bags etc.
+   
+   Each card is an image with dark overlay
+   and text centered on top.
+   
+   On hover: image zooms, overlay lightens
+   ────────────────────────────────────────── */
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.category-card {
+    position: relative;
+    height: 350px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.category-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.category-card:hover img {
+    transform: scale(1.1);
+}
+
+.category-card .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.category-card:hover .overlay {
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.category-card .overlay h3 {
+    font-size: 1.4rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--white);
+}
+
+.category-card .overlay p {
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-top: 8px;
+    max-width: none;
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 12: SALE BANNER
+   ────────────────────────────────────────── */
+
+.sale-banner {
+    background: var(--dark);
+    border: 1px solid var(--gold);
+    text-align: center;
+    padding: 60px 20px;
+    margin: 0 20px;
+}
+
+.sale-banner h2 {
+    color: var(--gold);
+    font-size: 2rem;
+    letter-spacing: 6px;
+    margin-bottom: 10px;
+}
+
+.sale-banner p {
+    margin: 0 auto 25px auto;
+    color: var(--gray);
+    letter-spacing: 2px;
+    max-width: none;
+}
+
+.sale-banner .code {
+    display: inline-block;
+    border: 1px dashed var(--gold);
+    padding: 12px 30px;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 4px;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 13: FEATURES / WHY CHOOSE US
+   ────────────────────────────────────────── */
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    text-align: center;
+}
+
+.feature-card {
+    padding: 45px 20px;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s ease;
+}
+
+.feature-card:hover {
+    border-color: var(--gold);
+}
+
+.feature-card .icon {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: var(--gold);
+}
+
+.feature-card h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.feature-card p {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin: 0 auto;
+    max-width: none;
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 14: FORMS
+   
+   Used on: login, signup, contact, 
+   checkout, feedback, forgot-password
+   
+   .form-card = the dark card container
+   .form-group = label + input pair
+   
+   focus = when user clicks on input
+   border-color changes to gold on focus
+   ────────────────────────────────────────── */
+
+.form-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 50px 40px;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.form-card.wide {
+    max-width: 800px;
+}
+
+.form-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.form-card .gold-line {
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gray);
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--dark);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease;
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: var(--gold);
+}
+
+.form-group textarea {
+    height: 130px;
+    resize: vertical;
+}
+
+.form-group select {
+    appearance: none;
+    cursor: pointer;
+}
+
+.form-links {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.form-links a {
+    font-size: 0.8rem;
+    color: var(--gold);
+}
+
+.form-links p {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin: 0 auto;
+    max-width: none;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 15: CART PAGE
+   ────────────────────────────────────────── */
+
+.cart-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+}
+
+.cart-item {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+.cart-item img {
+    width: 100px;
+    height: 130px;
+    object-fit: cover;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-info h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.cart-item-info .item-meta {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-bottom: 8px;
+}
+
+.cart-item-info .item-price {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gold);
+}
+
+.remove-btn {
+    color: var(--gray);
+    cursor: pointer;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+    background: none;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.remove-btn:hover {
+    color: var(--red);
+}
+
+.cart-summary {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 30px;
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+.cart-summary h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 0.9rem;
+}
+
+.summary-row span:first-child {
+    color: var(--gray);
+}
+
+.summary-row.total {
+    border-top: 1px solid var(--border);
+    margin-top: 10px;
+    padding-top: 15px;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.summary-row.total span {
+    color: var(--gold);
+}
+
+.summary-row.discount span:last-child {
+    color: var(--green);
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 16: WISHLIST
+   ────────────────────────────────────────── */
+
+.wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 17: TESTIMONIALS
+   ────────────────────────────────────────── */
+
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.testimonial-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 35px;
+    transition: border-color 0.3s ease;
+}
+
+.testimonial-card:hover {
+    border-color: var(--gold);
+}
+
+.testimonial-card .stars {
+    color: var(--gold);
+    font-size: 0.9rem;
+    margin-bottom: 18px;
+    letter-spacing: 3px;
+}
+
+.testimonial-card .quote {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--light-gray);
+    line-height: 1.8;
+    margin-bottom: 22px;
+}
+
+.testimonial-card .author {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.testimonial-card .location {
+    font-size: 0.72rem;
+    color: var(--gray);
+    margin-top: 3px;
+}
+
+
+/* ──────────────────────────────────────────
+   SECTION 18: TEAM MEMBERS
+   ────────────────────────────────────────── */
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.team-card {
+  text-align: center;
+}
+
+.team-card .team-image {
+width: 200px;
+height: 200px;
+border-radius: 50%;
+overflow: hidden;
+margin: 0 auto 25px auto;
+border: 2px solid var(--border);
+transition: border-color 0.3s ease;
+}
+
+.team-card:hover .team-image {
+border-color: var(--gold);
+}
+
+.team-card .team-image img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.team-card h3 {
+font-family: 'Montserrat', sans-serif;
+font-size: 1.05rem;
+font-weight: 600;
+margin-bottom: 5px;
+}
+
+.team-card .role {
+font-size: 0.75rem;
+color: var(--gold);
+text-transform: uppercase;
+letter-spacing: 2px;
+margin-bottom: 12px;
+}
+
+.team-card p {
+font-size: 0.8rem;
+margin: 0 auto;
+}
+
+/* ──────────────────────────────────────────
+SECTION 19: GALLERY
+────────────────────────────────────────── */
+
+.gallery-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 15px;
+}
+
+.gallery-item {
+position: relative;
+overflow: hidden;
+height: 380px;
+cursor: pointer;
+}
+
+.gallery-item img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+transition: transform 0.6s ease;
+}
+
+.gallery-item:hover img {
+transform: scale(1.1);
+}
+
+.gallery-item .gallery-overlay {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.5);
+opacity: 0;
+transition: opacity 0.3s ease;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.gallery-item:hover .gallery-overlay {
+opacity: 1;
+}
+
+.gallery-overlay span {
+color: var(--gold);
+font-size: 0.85rem;
+letter-spacing: 3px;
+text-transform: uppercase;
+font-weight: 500;
+}
+
+/* ──────────────────────────────────────────
+SECTION 20: PRICING CARDS
+────────────────────────────────────────── */
+
+.pricing-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 30px;
+}
+
+.pricing-card {
+background: var(--card);
+border: 1px solid var(--border);
+padding: 45px 30px;
+text-align: center;
+transition: all 0.3s ease;
+position: relative;
+}
+
+.pricing-card.featured {
+border-color: var(--gold);
+transform: scale(1.05);
+}
+
+.pricing-card.featured::before {
+content: 'POPULAR';
+position: absolute;
+top: -1px;
+left: 0;
+right: 0;
+background: var(--gold);
+color: var(--black);
+font-size: 0.65rem;
+font-weight: 700;
+letter-spacing: 3px;
+padding: 6px;
+font-family: 'Montserrat', sans-serif;
+}
+
+.pricing-card:hover {
+border-color: var(--gold);
+}
+
+.pricing-card .plan-name {
+font-family: 'Montserrat', sans-serif;
+font-size: 0.8rem;
+text-transform: uppercase;
+letter-spacing: 3px;
+color: var(--gold);
+margin-bottom: 18px;
+}
+
+.pricing-card .plan-price {
+font-family: 'Playfair Display', serif;
+font-size: 2.8rem;
+font-weight: 700;
+margin-bottom: 5px;
+}
+
+.pricing-card .plan-period {
+font-size: 0.8rem;
+color: var(--gray);
+margin-bottom: 30px;
+}
+
+.pricing-card .plan-features {
+list-style: none;
+text-align: left;
+margin-bottom: 35px;
+}
+
+.pricing-card .plan-features li {
+padding: 12px 0;
+border-bottom: 1px solid var(--border);
+font-size: 0.85rem;
+color: var(--light-gray);
+}
+
+.pricing-card .plan-features li::before {
+content: '✓ ';
+color: var(--gold);
+font-weight: 700;
+}
+
+.pricing-card .plan-features li.no::before {
+content: '✗ ';
+color: var(--gray);
+}
+
+.pricing-card .plan-features li.no {
+color: var(--gray);
+}
+
+/* ──────────────────────────────────────────
+SECTION 21: FEEDBACK / REVIEWS
+────────────────────────────────────────── */
+
+.review-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 25px;
+margin-top: 50px;
+}
+
+.review-card {
+background: var(--card);
+border: 1px solid var(--border);
+padding: 25px;
+}
+
+.review-card .review-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 10px;
+}
+
+.review-card .reviewer-name {
+font-weight: 600;
+font-size: 0.9rem;
+}
+
+.review-card .review-date {
+font-size: 0.72rem;
+color: var(--gray);
+}
+
+.review-card .review-stars {
+color: var(--gold);
+margin-bottom: 10px;
+letter-spacing: 3px;
+}
+
+.review-card .review-text {
+font-size: 0.85rem;
+color: var(--light-gray);
+line-height: 1.7;
+}
+
+.star-rating {
+display: flex;
+gap: 5px;
+margin-bottom: 15px;
+}
+
+.star-rating span {
+font-size: 1.5rem;
+color: var(--border);
+cursor: pointer;
+transition: color 0.2s ease;
+}
+
+.star-rating span.active,
+.star-rating span:hover {
+color: var(--gold);
+}
+
+/* ──────────────────────────────────────────
+SECTION 22: PROFILE PAGE
+────────────────────────────────────────── */
+
+.profile-layout {
+display: grid;
+grid-template-columns: 300px 1fr;
+gap: 40px;
+}
+
+.profile-sidebar {
+background: var(--card);
+border: 1px solid var(--border);
+padding: 40px 30px;
+text-align: center;
+height: fit-content;
+}
+
+.profile-avatar {
+width: 120px;
+height: 120px;
+border-radius: 50%;
+background: var(--border);
+margin: 0 auto 20px auto;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 2.5rem;
+color: var(--gold);
+border: 2px solid var(--gold);
+font-family: 'Playfair Display', serif;
+}
+
+.profile-sidebar h3 {
+font-family: 'Montserrat', sans-serif;
+font-size: 1.1rem;
+font-weight: 600;
+margin-bottom: 5px;
+}
+
+.profile-sidebar .member-since {
+font-size: 0.72rem;
+color: var(--gray);
+text-transform: uppercase;
+letter-spacing: 1.5px;
+}
+
+.profile-details {
+background: var(--card);
+border: 1px solid var(--border);
+padding: 40px;
+}
+
+.profile-details h3 {
+font-family: 'Montserrat', sans-serif;
+font-size: 0.95rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+margin-bottom: 25px;
+padding-bottom: 15px;
+border-bottom: 1px solid var(--border);
+}
+
+.detail-row {
+display: flex;
+padding: 15px 0;
+border-bottom: 1px solid var(--border);
+}
+
+.detail-row .detail-label {
+width: 150px;
+font-size: 0.78rem;
+color: var(--gray);
+text-transform: uppercase;
+letter-spacing: 1px;
+flex-shrink: 0;
+}
+
+.detail-row .detail-value {
+font-size: 0.9rem;
+color: var(--white);
+}
+
+/* ──────────────────────────────────────────
+SECTION 23: SEARCH PAGE
+────────────────────────────────────────── */
+
+.search-bar {
+display: flex;
+max-width: 600px;
+margin: 0 auto 50px auto;
+border: 1px solid var(--border);
+}
+
+.search-bar input {
+flex: 1;
+padding: 16px 20px;
+background: var(--dark);
+border: none;
+color: var(--white);
+font-family: 'Montserrat', sans-serif;
+font-size: 0.95rem;
+outline: none;
+}
+
+.search-bar input:focus {
+outline: none;
+}
+
+.search-bar button {
+padding: 16px 30px;
+background: var(--gold);
+color: var(--black);
+border: none;
+font-family: 'Montserrat', sans-serif;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 2px;
+font-size: 0.75rem;
+cursor: pointer;
+transition: background 0.3s ease;
+}
+
+.search-bar button:hover {
+background: var(--gold-hover);
+}
+
+.search-results-info {
+font-size: 0.85rem;
+color: var(--gray);
+margin-bottom: 30px;
+}
+
+/* ──────────────────────────────────────────
+SECTION 24: CHECKOUT PAGE
+────────────────────────────────────────── */
+
+.checkout-layout {
+display: grid;
+grid-template-columns: 1.5fr 1fr;
+gap: 40px;
+}
+
+.checkout-section {
+background: var(--card);
+border: 1px solid var(--border);
+padding: 35px;
+margin-bottom: 25px;
+}
+
+.checkout-section h3 {
+font-family: 'Montserrat', sans-serif;
+font-size: 0.9rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+margin-bottom: 25px;
+padding-bottom: 15px;
+border-bottom: 1px solid var(--border);
+}
+
+.radio-group {
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+
+.radio-option {
+display: flex;
+align-items: center;
+gap: 12px;
+padding: 14px;
+border: 1px solid var(--border);
+cursor: pointer;
+transition: border-color 0.3s ease;
+}
+
+.radio-option:hover {
+border-color: var(--gold);
+}
+
+.radio-option input[type="radio"] {
+accent-color: var(--gold);
+width: 16px;
+height: 16px;
+}
+
+.radio-option label {
+font-size: 0.85rem;
+cursor: pointer;
+color: var(--light-gray);
+}
+
+/* ──────────────────────────────────────────
+SECTION 25: FILTER BUTTONS
+────────────────────────────────────────── */
+.filter-bar {
+display: flex;
+justify-content: center;
+gap: 10px;
+margin-bottom: 40px;
+flex-wrap: wrap;
+}
+
+.filter-btn {
+padding: 10px 22px;
+background: transparent;
+border: 1px solid var(--border);
+color: var(--gray);
+font-family: 'Montserrat', sans-serif;
+font-size: 0.72rem;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+background: var(--gold);
+color: var(--black);
+border-color: var(--gold);
+}
+
+/* ──────────────────────────────────────────
+SECTION 26: PAGE HEADER
+
+Used on ALL inner pages (not home).
+Dark banner at top with page title.
+
+padding-top: 120px because navbar is
+fixed and takes ~70px height.
+120px gives space below navbar.
+────────────────────────────────────────── */
+
+.page-header {
+background: var(--dark);
+padding: 130px 0 60px 0;
+text-align: center;
+border-bottom: 1px solid var(--border);
+}
+
+.page-header h1 {
+font-size: 2.2rem;
+letter-spacing: 6px;
+text-transform: uppercase;
+margin-bottom: 10px;
+}
+
+.page-header p {
+margin: 0 auto;
+color: var(--gold);
+font-size: 0.82rem;
+letter-spacing: 3px;
+text-transform: uppercase;
+max-width: none;
+}
+
+/* ──────────────────────────────────────────
+SECTION 27: FOOTER
+────────────────────────────────────────── */
+
+.footer {
+background: var(--dark);
+border-top: 1px solid var(--border);
+padding: 80px 0 30px 0;
+margin-top: 0;
+}
+
+.footer-grid {
+display: grid;
+grid-template-columns: 2fr 1fr 1fr 1fr;
+gap: 40px;
+margin-bottom: 50px;
+}
+
+.footer-brand .footer-logo img {
+height: 35px;
+margin-bottom: 18px;
+}
+
+.footer-brand p {
+font-size: 0.8rem;
+color: var(--gray);
+max-width: 280px;
+}
+
+.footer-col h4 {
+font-family: 'Montserrat', sans-serif;
+font-size: 0.75rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 2px;
+color: var(--white);
+margin-bottom: 22px;
+}
+
+.footer-col ul {
+list-style: none;
+}
+
+.footer-col ul li {
+margin-bottom: 10px;
+}
+
+.footer-col ul li a {
+color: var(--gray);
+font-size: 0.8rem;
+transition: color 0.3s ease;
+}
+
+.footer-col ul li a:hover {
+color: var(--gold);
+}
+
+.footer-contact li {
+display: flex;
+gap: 10px;
+align-items: flex-start;
+margin-bottom: 12px;
+font-size: 0.8rem;
+color: var(--gray);
+}
+
+.footer-contact .contact-icon {
+color: var(--gold);
+min-width: 20px;
+}
+
+.footer-bottom {
+border-top: 1px solid var(--border);
+padding-top: 25px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.footer-bottom p {
+font-size: 0.72rem;
+color: var(--gray);
+max-width: none;
+}
+
+.social-links {
+display: flex;
+gap: 18px;
+}
+
+.social-links a {
+color: var(--gray);
+font-size: 0.8rem;
+transition: color 0.3s ease;
+letter-spacing: 1px;
+}
+
+.social-links a:hover {
+color: var(--gold);
+}
+
+/* ──────────────────────────────────────────
+SECTION 28: UTILITY CLASSES
+────────────────────────────────────────── */
+
+.text-center {
+text-align: center;
+}
+
+.text-gold {
+color: var(--gold);
+}
+
+.mt-20 {
+margin-top: 20px;
+}
+
+.mt-40 {
+margin-top: 40px;
+}
+
+.mb-20 {
+margin-bottom: 20px;
+}
+
+.mb-40 {
+margin-bottom: 40px;
+}
+
+.empty-state {
+text-align: center;
+padding: 80px 20px;
+}
+
+.empty-state .empty-icon {
+font-size: 3.5rem;
+color: var(--border);
+margin-bottom: 20px;
+}
+
+.empty-state h3 {
+font-family: 'Montserrat', sans-serif;
+font-size: 1.1rem;
+margin-bottom: 10px;
+}
+
+.empty-state p {
+margin: 0 auto 25px auto;
+}
+
+.order-table {
+width: 100%;
+border-collapse: collapse;
+}
+
+.order-table th,
+.order-table td {
+padding: 12px 15px;
+text-align: left;
+border-bottom: 1px solid var(--border);
+font-size: 0.85rem;
+}
+
+.order-table th {
+color: var(--gray);
+font-weight: 500;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-size: 0.68rem;
+}
+
+.order-status {
+padding: 4px 10px;
+font-size: 0.68rem;
+text-transform: uppercase;
+letter-spacing: 1px;
+display: inline-block;
+}
+
+.status-delivered {
+color: var(--green);
+border: 1px solid var(--green);
+}
+
+.status-pending {
+color: var(--gold);
+border: 1px solid var(--gold);
+}
+
+.status-shipped {
+color: #3498db;
+border: 1px solid #3498db;
+}
+
+/* ──────────────────────────────────────────
+SECTION 29: MOBILE RESPONSIVE
+
+@media = "when screen size is..."
+max-width: 768px = tablets and phones
+max-width: 480px = small phones
+
+We OVERRIDE desktop styles here.
+Everything stacks vertically.
+No overlapping. No breaking.
+
+THIS FIXES YOUR MOBILE PROBLEMS.
+────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+
+h1 {      
+    font-size: 1.8rem;      
+}      
+  
+h2 {      
+    font-size: 1.4rem;      
+    margin-bottom: 30px;      
+}      
+  
+.nav-links {      
+    display: none;      
+}      
+  
+.menu-toggle {      
+    display: block;      
+}      
+  
+.hero {      
+    background-attachment: scroll;      
+}      
+  
+.hero-content h1 {      
+    font-size: 2.5rem;      
+    letter-spacing: 8px;      
+}      
+  
+.hero-content .tagline {      
+    font-size: 0.8rem;      
+    letter-spacing: 3px;      
+}      
+  
+.product-grid {      
+    grid-template-columns: repeat(2, 1fr);      
+    gap: 15px;      
+}      
+  
+.product-image {      
+    height: 250px;      
+}      
+  
+.category-grid {      
+    grid-template-columns: repeat(2, 1fr);      
+    gap: 15px;      
+}      
+  
+.category-card {      
+    height: 220px;      
+}      
+  
+.features-grid {      
+    grid-template-columns: repeat(2, 1fr);      
+    gap: 15px;      
+}      
+  
+.testimonial-grid {      
+    grid-template-columns: 1fr;      
+}      
+  
+.pricing-grid {      
+    grid-template-columns: 1fr;      
+    gap: 20px;      
+}      
+  
+.pricing-card.featured {      
+    transform: none;      
+}      
+  
+.gallery-grid {      
+    grid-template-columns: repeat(2, 1fr);      
+    gap: 10px;      
+}      
+  
+.gallery-item {      
+    height: 250px;      
+}      
+  
+.review-grid {      
+    grid-template-columns: 1fr;      
+}      
+  
+.wishlist-grid {      
+    grid-template-columns: repeat(2, 1fr);      
+}      
+  
+.cart-layout {      
+    grid-template-columns: 1fr;      
+}      
+  
+.checkout-layout {      
+    grid-template-columns: 1fr;      
+}      
+  
+.profile-layout {      
+    grid-template-columns: 1fr;      
+}      
+  
+.footer-grid {      
+    grid-template-columns: 1fr 1fr;      
+    gap: 30px;      
+}      
+  
+.form-row {      
+    grid-template-columns: 1fr;      
+}      
+  
+.section {      
+    padding: 60px 0;      
+}      
+  
+.page-header {      
+    padding: 100px 0 40px 0;      
+}      
+  
+.team-grid {      
+    grid-template-columns: 1fr;      
+    max-width: 300px;      
+}      
+  
+.sale-banner {      
+    margin: 0 10px;      
+    padding: 35px 15px;      
+}      
+  
+.sale-banner h2 {      
+    font-size: 1.3rem;      
+    letter-spacing: 3px;      
+}      
+  
+.section-title {      
+    margin-bottom: 40px;      
+}
+
+}
+
+@media (max-width: 480px) {
+
+h1 {      
+    font-size: 1.4rem;      
+}      
+  
+h2 {      
+    font-size: 1.2rem;      
+}      
+  
+.hero-content h1 {      
+    font-size: 2rem;      
+    letter-spacing: 5px;      
+}      
+  
+.hero-content .tagline {      
+    font-size: 0.7rem;      
+    letter-spacing: 2px;      
+}      
+  
+.product-grid {      
+    grid-template-columns: repeat(2, 1fr);      
+    gap: 10px;      
+}      
+  
+.product-image {      
+    height: 200px;      
+}      
+  
+.product-info {      
+    padding: 12px;      
+}      
+  
+.product-info h3 {      
+    font-size: 0.8rem;      
+}      
+  
+.product-actions .btn {      
+    font-size: 0.6rem;      
+    padding: 8px;      
+    letter-spacing: 1px;      
+}      
+  
+.price .current {      
+    font-size: 0.95rem;      
+}      
+  
+.category-grid {      
+    grid-template-columns: 1fr;      
+}      
+  
+.category-card {      
+    height: 200px;      
+}      
+  
+.features-grid {      
+    grid-template-columns: 1fr;      
+}      
+  
+.gallery-grid {      
+    grid-template-columns: repeat(2, 1fr);      
+}      
+  
+.gallery-item {      
+    height: 180px;      
+}      
+  
+.cart-item {      
+    flex-direction: column;      
+    text-align: center;      
+}      
+  
+.cart-item img {      
+    width: 100%;      
+    height: 200px;      
+}      
+  
+.wishlist-grid {      
+    grid-template-columns: repeat(2, 1fr);      
+    gap: 10px;      
+}      
+  
+.footer-grid {      
+    grid-template-columns: 1fr;      
+}      
+  
+.footer-bottom {      
+    flex-direction: column;      
+    gap: 15px;      
+    text-align: center;      
+}      
+  
+.btn {      
+    padding: 12px 25px;      
+    font-size: 0.72rem;      
+}      
+  
+.form-card {      
+    padding: 30px 20px;      
+}      
+  
+.filter-bar {      
+    justify-content: flex-start;      
+    overflow-x: auto;      
+    padding-bottom: 10px;      
+    flex-wrap: nowrap;      
+}      
+  
+.filter-btn {      
+    white-space: nowrap;      
+}      
+  
+.page-header {      
+    padding: 90px 0 30px 0;      
+}      
+  
+.page-header h1 {      
+    font-size: 1.5rem;      
+    letter-spacing: 3px;      
+}      
+  
+.page-header p {      
+    font-size: 0.7rem;      
+}      
+  
+.nav-icons {      
+    gap: 12px;      
+}      
+  
+.nav-icons a {      
+    font-size: 0.7rem;      
+}      
+  
+.navbar .logo img {      
+    height: 30px;      
+}      
+  
+.checkout-section {      
+    padding: 25px 18px;      
+}      
+  
+.profile-details {      
+    padding: 25px 18px;      
+}      
+  
+.detail-row {      
+    flex-direction: column;      
+    gap: 5px;      
+}      
+  
+.detail-row .detail-label {      
+    width: auto;      
+}
+
+}
+
+/* ──────────────────────────────────────────
+SECTION 30: ANIMATIONS
+────────────────────────────────────────── */
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(20px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.fade-in {
+animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes pulse {
+0%, 100% {
+opacity: 1;
+}
+50% {
+opacity: 0.7;
+}
+}
+
+.sale-badge {
+animation: pulse 2s ease infinite;
+}
+
+img {
+display: block;
+max-width: 100%;
+}
+
+/* ──────────────────────────────────────────
+SECTION 31: MOBILE MENU
+
+On mobile, nav links are hidden.
+We show ☰ button instead.
+
+Since NO JavaScript, we use CSS
+checkbox hack:
+
+Hidden checkbox
+
+Label styled as ☰ button
+
+When checked, menu appears
+────────────────────────────────────────── */
+
+
+.menu-toggle {
+display: none;
+background: none;
+border: none;
+color: var(--white);
+font-size: 1.5rem;
+cursor: pointer;
+font-family: 'Montserrat', sans-serif;
+}
+
+#menu-checkbox {
+display: none;
+}
+
+.mobile-menu {
+display: none;
+position: fixed;
+top: 70px;
+left: 0;
+width: 100%;
+background: rgba(10, 10, 10, 0.98);
+border-bottom: 1px solid var(--border);
+padding: 20px;
+z-index: 999;
+}
+
+.mobile-menu a {
+display: block;
+padding: 15px 0;
+color: var(--white);
+font-size: 0.85rem;
+text-transform: uppercase;
+letter-spacing: 2px;
+border-bottom: 1px solid var(--border);
+transition: color 0.3s ease;
+}
+
+.mobile-menu a:last-child {
+border-bottom: none;
+}
+
+.mobile-menu a:hover {
+color: var(--gold);
+}
+
+#menu-checkbox:checked ~ .mobile-menu {
+display: block;
+}
+
+@media (max-width: 768px) {
+.menu-toggle {
+display: block;
+}
+}

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ==========================================
+    WHAT IS THIS SECTION?
+    
+    <head> contains INVISIBLE information:
+    - Page title (shows in browser tab)
+    - Link to CSS file (our design)
+    - Meta tags (tells browser about the page)
+    
+    The user NEVER sees this section directly.
+    But without it, nothing works properly.
+    =========================================== -->
+
+    <!-- charset: tells browser to support all 
+    languages and symbols (₹, ©, etc) -->
+    <meta charset="UTF-8">
+
+    <!-- viewport: CRITICAL for mobile!
+    Without this, mobile will zoom out and 
+    show tiny desktop version.
+    width=device-width = match phone screen width
+    initial-scale=1.0 = no zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title shows in browser tab -->
+    <title>RAVION - Built for Modern Men</title>
+
+    <!-- Link to our CSS file
+    rel="stylesheet" = this is a design file
+    href="CSS/style.css" = path to the file
+    (CSS folder with capital C, matching YOUR folder) -->
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+
+<body>
+    <!-- ==========================================
+    SECTION 1: NAVIGATION BAR
+    
+    This appears on EVERY page (we copy it).
+    Fixed to top. Frosted glass effect.
+    Logo left, links center, icons right.
+    
+    On mobile: links hide, hamburger shows.
+    =========================================== -->
+
+    <!-- Hidden checkbox for mobile menu toggle 
+    (CSS trick - no JavaScript needed) -->
+    <input type="checkbox" id="menu-checkbox">
+
+    <nav class="navbar">
+        <div class="container">
+
+            <!-- Logo - clicks to home page -->
+            <a href="Index.html" class="logo">
+                <img src="Images/Logo.png" alt="RAVION">
+            </a>
+
+            <!-- Desktop navigation links 
+            These HIDE on mobile (CSS handles it) -->
+            <ul class="nav-links">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="pricing.html">Membership</a></li>
+                <li><a href="team.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+
+            <!-- Right side icons -->
+            <div class="nav-icons">
+                <a href="search.html">&#x1F50D;</a>
+                <a href="wishlist.html">&#x2661;</a>
+                <a href="cart.html">&#x1F6D2;</a>
+                <a href="login.html">&#x263A;</a>
+
+                <!-- Hamburger menu button (mobile only)
+                label for="menu-checkbox" means clicking 
+                this toggles the hidden checkbox above -->
+                <label for="menu-checkbox" class="menu-toggle">
+                    &#9776;
+                </label>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile dropdown menu 
+    This ONLY appears when hamburger is clicked
+    (checkbox:checked makes it visible via CSS) -->
+    <div class="mobile-menu">
+        <a href="Index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="pricing.html">Membership</a>
+        <a href="team.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="testimonials.html">Reviews</a>
+        <a href="search.html">Search</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+
+    <!-- ==========================================
+    SECTION 2: HERO SECTION
+    
+    Full screen. Dark fashion image background.
+    Brand name + tagline + Shop Now button.
+    
+    THIS is where the premium feeling starts.
+    Big, bold, minimal. Nothing else.
+    
+    background-image is set INLINE here because 
+    each page can have different hero images.
+    The CSS handles the sizing/overlay.
+    =========================================== -->
+
+    <section class="hero" style="background-image: url('Images/hero-bg.jpg');">
+
+        <!-- Dark overlay makes text readable 
+        over any background image -->
+        <div class="hero-overlay"></div>
+
+        <!-- Content sits ON TOP of overlay (z-index: 2) -->
+        <div class="hero-content fade-in">
+            <h1>RAVION</h1>
+            <p class="tagline">Built for Modern Men</p>
+            <a href="products.html" class="btn btn-gold">Shop Now</a>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    SECTION 3: SALE BANNER
+    
+    Eye-catching offer section.
+    Gold border. Discount code.
+    Creates urgency to buy.
+    =========================================== -->
+
+    <section class="section">
+        <div class="sale-banner">
+            <h2>Flat 40% Off First Order</h2>
+            <p>Premium quality at unbeatable prices. Limited time offer.</p>
+            <div class="code">RAVION40</div>
+            <br>
+            <a href="products.html" class="btn btn-outline btn-sm">Shop the Sale</a>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    SECTION 4: PRODUCT CATEGORIES
+    
+    Shows all clothing categories.
+    Each card: image + dark overlay + text.
+    Clicking any card goes to products page.
+    
+    We use YOUR downloaded images here.
+    Dark overlay makes text readable.
+    Hover effect: image zooms, overlay fades.
+    =========================================== -->
+
+    <section class="section section-dark">
+        <div class="container">
+
+            <!-- Section title with gold line -->
+            <div class="section-title">
+                <h2>Explore Categories</h2>
+                <div class="gold-line"></div>
+                <p>Curated collections for every occasion</p>
+            </div>
+
+            <!-- 3 column grid of categories -->
+            <div class="category-grid">
+
+                <!-- Category 1: Polo -->
+                <a href="products.html" class="category-card">
+                    <img src="Images/product-polo.jpg" alt="Polo Collection">
+                    <div class="overlay">
+                        <h3>Polo</h3>
+                        <p>From ₹799</p>
+                    </div>
+                </a>
+
+                <!-- Category 2: Shirts -->
+                <a href="products.html" class="category-card">
+                    <img src="Images/product-shirt.jpg" alt="Shirts Collection">
+                    <div class="overlay">
+                        <h3>Shirts</h3>
+                        <p>From ₹699</p>
+                    </div>
+                </a>
+
+                <!-- Category 3: Jackets -->
+                <a href="products.html" class="category-card">
+                    <img src="Images/product-jacket.jpg" alt="Jackets Collection">
+                    <div class="overlay">
+                        <h3>Jackets</h3>
+                        <p>From ₹1,499</p>
+                    </div>
+                </a>
+
+                <!-- Category 4: Bags -->
+                <a href="products.html" class="category-card">
+                    <img src="Images/product-bag.jpg" alt="Bags Collection">
+                    <div class="overlay">
+                        <h3>Bags</h3>
+                        <p>From ₹999</p>
+                    </div>
+                </a>
+
+                <!-- Category 5: Jeans -->
+                <a href="products.html" class="category-card">
+                    <img src="Images/product-jeans.jpg" alt="Jeans Collection">
+                    <div class="overlay">
+                        <h3>Jeans</h3>
+                        <p>From ₹899</p>
+                    </div>
+                </a>
+
+                <!-- Category 6: Office Wear -->
+                <a href="products.html" class="category-card">
+                    <img src="Images/product-office.jpg" alt="Office Wear">
+                    <div class="overlay">
+                        <h3>Office Wear</h3>
+                        <p>From ₹999</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    SECTION 5: FEATURED PRODUCTS
+    
+    Shows 6 best-selling products.
+    Each card: image + name + price + buttons.
+    
+    Some products have SALE badge.
+    All have Add to Cart + Wishlist.
+    
+    This section makes visitors want to BUY.
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>New Arrivals</h2>
+                <div class="gold-line"></div>
+                <p>Fresh drops you don't want to miss</p>
+            </div>
+
+            <div class="product-grid">
+
+                <!-- Product 1: Polo (with SALE) -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-polo.jpg" alt="Classic Polo">
+                        <span class="sale-badge">Sale</span>
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Polo</p>
+                        <h3>Classic Pique Polo</h3>
+                        <div class="price">
+                            <span class="current">&#8377;799</span>
+                            <span class="old">&#8377;1,299</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="products.html" class="btn btn-outline btn-sm">View</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2: Jacket -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-jacket.jpg" alt="Leather Jacket">
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Jacket</p>
+                        <h3>Urban Leather Jacket</h3>
+                        <div class="price">
+                            <span class="current">&#8377;2,499</span>
+                            <span class="old">&#8377;2,999</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="products.html" class="btn btn-outline btn-sm">View</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3: T-Shirt (with SALE) -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-tshirt.jpg" alt="Premium T-Shirt">
+                        <span class="sale-badge">New</span>
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">T-Shirt</p>
+                        <h3>Premium Cotton Tee</h3>
+                        <div class="price">
+                            <span class="current">&#8377;599</span>
+                            <span class="old">&#8377;999</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="products.html" class="btn btn-outline btn-sm">View</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 4: Bag -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-bag.jpg" alt="Leather Bag">
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Bags</p>
+                        <h3>Executive Leather Bag</h3>
+                        <div class="price">
+                            <span class="current">&#8377;1,499</span>
+                            <span class="old">&#8377;1,999</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="products.html" class="btn btn-outline btn-sm">View</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 5: Jeans (with SALE) -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-jeans.jpg" alt="Slim Fit Jeans">
+                        <span class="sale-badge">-30%</span>
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Jeans</p>
+                        <h3>Straight Fit Dark Jeans</h3>
+                        <div class="price">
+                            <span class="current">&#8377;999</span>
+                            <span class="old">&#8377;1,499</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="products.html" class="btn btn-outline btn-sm">View</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 6: Streetwear -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-streetwear.jpg" alt="Streetwear Hoodie">
+                        <span class="sale-badge">Hot</span>
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Streetwear</p>
+                        <h3>RavionOversized Tshirt</h3>
+                        <div class="price">
+                            <span class="current">&#8377;1,299</span>
+                            <span class="old">&#8377;1,799</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="products.html" class="btn btn-outline btn-sm">View</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- View all products button -->
+            <div class="text-center mt-40">
+                <a href="products.html" class="btn btn-outline">View All Products</a>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    SECTION 6: BRAND STORY / WHY RAVION
+    
+    This section tells the STORY of the brand.
+    Full width dark image background.
+    Text overlay explaining what makes 
+    RAVION different.
+    
+    This creates EMOTIONAL connection with 
+    the customer. Premium brands always 
+    tell a story.
+    =========================================== -->
+
+    <section class="hero" style="background-image: url('Images/gallery2.jpg'); height: 70vh;">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h2 style="font-size: 2.5rem; letter-spacing: 8px; margin-bottom: 15px;">The RAVION Story</h2>
+            <div class="gold-line"></div>
+            <p class="tagline" style="max-width: 600px; line-height: 1.8; letter-spacing: 2px; font-size: 0.85rem; margin-top: 20px;">
+                Born from the belief that every man deserves to look powerful without burning his wallet. 
+                RAVION blends premium fabrics with modern fits — designed for the streets, 
+                the office, and everything in between.
+            </p>
+            <br>
+            <a href="team.html" class="btn btn-outline">Meet the Team</a>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    SECTION 7: WHY CHOOSE US (FEATURES)
+    
+    4 key selling points of the brand.
+    Simple icons + short text.
+    
+    This builds TRUST with the customer.
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Why RAVION</h2>
+                <div class="gold-line"></div>
+            </div>
+
+            <div class="features-grid">
+
+                <!-- Feature 1 -->
+                <div class="feature-card">
+                    <div class="icon">&#x2726;</div>
+                    <h3>Premium Fabrics</h3>
+                    <p>Hand-selected materials that feel as good as they look</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-card">
+                    <div class="icon">&#x2B21;</div>
+                    <h3>Modern Fits</h3>
+                    <p>Contemporary cuts designed for the way you move</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card">
+                    <div class="icon">&#x27A4;</div>
+                    <h3>Fast Delivery</h3>
+                    <p>Straight to your door in 3-5 business days</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="feature-card">
+                    <div class="icon">&#x21BA;</div>
+                    <h3>Easy Returns</h3>
+                    <p>30-day hassle-free returns. No questions asked</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    SECTION 8: TESTIMONIALS PREVIEW
+    
+    Show 3 best customer reviews on home page.
+    Creates SOCIAL PROOF (others trust us, 
+    so you should too).
+    
+    Link to full testimonials page for more.
+    =========================================== -->
+
+    <section class="section section-dark">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>What Our Customers Say</h2>
+                <div class="gold-line"></div>
+                <p>Real reviews from real men</p>
+            </div>
+
+            <div class="testimonial-grid">
+
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card">
+                    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="quote">"The quality of fabric is unmatched at this price point. I've tried many brands but RAVION genuinely delivers premium quality. My go-to brand now."</p>
+                    <p class="author">Rahul Sharma</p>
+                    <p class="location">New Delhi</p>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card">
+                    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="quote">"Ordered the leather jacket and it exceeded all expectations. The fit is perfect, the leather is genuine, and the stitching is impeccable. Worth every rupee."</p>
+                    <p class="author">Vikram Singh</p>
+                    <p class="location">Mumbai</p>
+                </div>
+
+                <!-- Testimonial 3 -->
+                 <div class="testimonial-card">  
+                <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>  
+                <p class="quote">"Finally a brand that understands modern men's fashion. The office wear collection is classy yet comfortable. Getting compliments every day at work."</p>  
+                <p class="author">Arjun Patel</p>  
+                <p class="location">Bangalore</p>  
+            </div>  
+
+        </div>  
+
+        <div class="text-center mt-40">  
+            <a href="testimonials.html" class="btn btn-outline">Read All Reviews</a>  
+        </div>  
+
+    </div>  
+</section>  
+
+
+<!-- ==========================================  
+SECTION 9: GALLERY PREVIEW  
+  
+A small preview of the RAVION lookbook.  
+4 images in a row with hover zoom effect.  
+  
+Creates visual DESIRE. Customer sees   
+the clothes styled beautifully.  
+=========================================== -->  
+
+<section class="section">  
+    <div class="container">  
+
+        <div class="section-title">  
+            <h2>The Lookbook</h2>  
+            <div class="gold-line"></div>  
+            <p>Explore the RAVION aesthetic</p>  
+        </div>  
+
+        <div class="gallery-grid">  
+
+            <div class="gallery-item">  
+                <img src="Images/gallery1.jpg" alt="RAVION Lookbook">  
+                <div class="gallery-overlay">  
+                    <span>View</span>  
+                </div>  
+            </div>  
+
+            <div class="gallery-item">  
+                <img src="Images/gallery2.jpg" alt="RAVION Lookbook">  
+                <div class="gallery-overlay">  
+                    <span>View</span>  
+                </div>  
+            </div>  
+
+            <div class="gallery-item">  
+                <img src="Images/gallery3.jpg" alt="RAVION Lookbook">  
+                <div class="gallery-overlay">  
+                    <span>View</span>  
+                </div>  
+            </div>  
+
+        </div>  
+
+        <div class="text-center mt-40">  
+            <a href="gallery.html" class="btn btn-outline">View Full Gallery</a>  
+        </div>  
+
+    </div>  
+</section>  
+
+
+<!-- ==========================================  
+SECTION 10: MEMBERSHIP CTA  
+  
+CTA = Call to Action  
+Encourages visitors to join RAVION   
+membership for exclusive benefits.  
+  
+Uses a cinematic background image   
+with dark overlay, like the hero section.  
+=========================================== -->  
+
+<section class="hero" style="background-image: url('Images/gallery4.jpg'); height: 60vh;">  
+    <div class="hero-overlay"></div>  
+    <div class="hero-content">  
+        <h2 style="font-size: 2.2rem; letter-spacing: 6px; margin-bottom: 10px;">Join the Club</h2>  
+        <div class="gold-line"></div>  
+        <p class="tagline" style="letter-spacing: 2px; font-size: 0.85rem; margin-top: 15px;">  
+            Exclusive drops. Member-only prices. Free shipping.  
+        </p>  
+        <br>  
+        <a href="pricing.html" class="btn btn-gold">View Membership Plans</a>  
+    </div>  
+</section>  
+
+
+<!-- ==========================================  
+SECTION 11: FOOTER  
+  
+Same footer on ALL pages.  
+Contains: brand info, shop links,   
+help links, contact info, social links.  
+  
+This is copied to every page.  
+=========================================== -->  
+
+<footer class="footer">  
+    <div class="container">  
+
+        <div class="footer-grid">  
+
+            <!-- Column 1: Brand -->  
+            <div class="footer-brand">  
+                <a href="Index.html" class="footer-logo">  
+                    <img src="Images/Logo.png" alt="RAVION">  
+                </a>  
+                <p>Premium men's fashion brand offering high-quality essentials. Built for modern men who value style, comfort, and confidence.</p>  
+            </div>  
+
+            <!-- Column 2: Shop Links -->  
+            <div class="footer-col">  
+                <h4>Shop</h4>  
+                <ul>  
+                    <li><a href="products.html">All Products</a></li>  
+                    <li><a href="products.html">Polo Shirts</a></li>  
+                    <li><a href="products.html">Jackets</a></li>  
+                    <li><a href="products.html">Bags</a></li>  
+                    <li><a href="products.html">Jeans</a></li>  
+                    <li><a href="products.html">Office Wear</a></li>  
+                </ul>  
+            </div>  
+
+            <!-- Column 3: Help Links -->  
+            <div class="footer-col">  
+                <h4>Help</h4>  
+                <ul>  
+                    <li><a href="contact.html">Contact Us</a></li>  
+                    <li><a href="feedback.html">Give Feedback</a></li>  
+                    <li><a href="pricing.html">Membership</a></li>  
+                    <li><a href="testimonials.html">Reviews</a></li>  
+                    <li><a href="profile.html">My Account</a></li>  
+                </ul>  
+            </div>  
+
+            <!-- Column 4: Contact Info -->  
+            <div class="footer-col">  
+                <h4>Contact</h4>  
+                <ul class="footer-contact">  
+                    <li>  
+                        <span class="contact-icon">&#9993;</span>  
+                        <span>info@ravion.in</span>  
+                    </li>  
+                    <li>  
+                        <span class="contact-icon">&#9742;</span>  
+                        <span>+91 98765 43210</span>  
+                    </li>  
+                    <li>  
+                        <span class="contact-icon">&#9906;</span>  
+                        <span>Chandigarh, India</span>  
+                    </li>  
+                </ul>  
+            </div>  
+
+        </div>  
+
+        <!-- Footer Bottom Bar -->  
+        <div class="footer-bottom">  
+            <p>&copy; 2026 RAVION. All Rights Reserved.</p>  
+            <div class="social-links">  
+                <a href="#">Instagram</a>  
+                <a href="#">Twitter</a>  
+                <a href="#">Facebook</a>  
+                <a href="#">YouTube</a>  
+            </div>  
+        </div>  
+
+    </div>  
+</footer>
+
+</body>  
+</html>  

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist - RAVION</title>
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <!-- ==========================================
+    PAGE-SPECIFIC STYLES
+    
+    Wishlist page unique elements:
+    - Wishlist cards (slightly different from product cards)
+    - "Move to Cart" button
+    - Remove (X) button on each card
+    - Wishlist count badge
+    - Share wishlist section
+    =========================================== -->
+    <style>
+        /* Wishlist item card */
+        .wishlist-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            position: relative;
+            transition: border-color 0.3s ease;
+        }
+
+        .wishlist-card:hover {
+            border-color: var(--gold);
+        }
+
+        /* Remove X button on top right */
+        .wishlist-remove {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 30px;
+            height: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border);
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            cursor: pointer;
+            z-index: 2;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .wishlist-remove:hover {
+            border-color: var(--red);
+            color: var(--red);
+            background: rgba(192, 57, 43, 0.15);
+        }
+
+        /* Wishlist image */
+        .wishlist-card .wishlist-img {
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .wishlist-card .wishlist-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .wishlist-card:hover .wishlist-img img {
+            transform: scale(1.08);
+        }
+
+        /* Wishlist info section */
+        .wishlist-card .wishlist-info {
+            padding: 18px;
+        }
+
+        .wishlist-card .wishlist-info .category {
+            font-size: 0.68rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 5px;
+        }
+
+        .wishlist-card .wishlist-info h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .wishlist-card .wishlist-info .price {
+            margin-bottom: 15px;
+        }
+
+        /* Stock status */
+        .stock-status {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .in-stock {
+            color: var(--green);
+        }
+
+        .low-stock {
+            color: #e67e22;
+        }
+
+        .out-of-stock {
+            color: var(--red);
+        }
+
+        /* Date added */
+        .date-added {
+            font-size: 0.68rem;
+            color: var(--gray);
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Wishlist summary bar */
+        .wishlist-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 20px 25px;
+            margin-bottom: 35px;
+        }
+
+        .wishlist-summary .count {
+            font-size: 0.85rem;
+            color: var(--light-gray);
+        }
+
+        .wishlist-summary .count span {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .wishlist-actions-bar {
+            display: flex;
+            gap: 15px;
+        }
+
+        .wishlist-actions-bar a {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gray);
+            transition: color 0.3s ease;
+        }
+
+        .wishlist-actions-bar a:hover {
+            color: var(--gold);
+        }
+
+        /* Share wishlist section */
+        .share-section {
+            text-align: center;
+            margin-top: 50px;
+            padding: 40px;
+            background: var(--card);
+            border: 1px solid var(--border);
+        }
+
+        .share-section h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .share-section p {
+            font-size: 0.78rem;
+            color: var(--gray);
+            margin: 0 auto 20px auto;
+            max-width: none;
+        }
+
+        .share-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .share-links a {
+            width: 42px;
+            height: 42px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: var(--gray);
+            transition: all 0.3s ease;
+        }
+
+        .share-links a:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        @media (max-width: 768px) {
+            .wishlist-summary {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .wishlist-card .wishlist-img {
+                height: 220px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .wishlist-card .wishlist-img {
+                height: 180px;
+            }
+
+            .wishlist-card .wishlist-info {
+                padding: 12px;
+            }
+
+            .wishlist-card .wishlist-info h3 {
+                font-size: 0.78rem;
+            }
+
+            .share-links {
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <input type="checkbox" id="menu-checkbox">
+    <nav class="navbar">
+        <div class="container">
+            <a href="Index.html" class="logo">
+                <img src="Images/Logo.png" alt="RAVION">
+            </a>
+            <ul class="nav-links">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="pricing.html">Membership</a></li>
+                <li><a href="team.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="search.html">&#x1F50D;</a>
+                <a href="wishlist.html">&#x2661;</a>
+                <a href="cart.html">&#x1F6D2;</a>
+                <a href="login.html">&#x263A;</a>
+                <label for="menu-checkbox" class="menu-toggle">&#9776;</label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="Index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="pricing.html">Membership</a>
+        <a href="team.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="testimonials.html">Reviews</a>
+        <a href="search.html">Search</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <div class="container">
+            <h1>My Wishlist</h1>
+            <p>Your saved favourites</p>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    WISHLIST CONTENT
+    
+    DESIGN CHOICES:
+    - Summary bar at top (count + actions)
+    - 4-column grid of wishlist items
+    - Each item has: image, name, price, 
+      stock status, date added
+    - "Move to Cart" button (gold)
+    - Remove X button (top right)
+    - Share wishlist section at bottom
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <!-- ============================
+            WISHLIST SUMMARY BAR
+            
+            Shows total items count.
+            Has "Move All to Cart" and 
+            "Clear Wishlist" options.
+            ============================ -->
+            <div class="wishlist-summary">
+                <p class="count">You have <span>4 items</span> in your wishlist</p>
+                <div class="wishlist-actions-bar">
+                    <a href="cart.html">Move All to Cart</a>
+                    <a href="#" style="color: var(--red);">Clear Wishlist</a>
+                </div>
+            </div>
+
+
+            <!-- WISHLIST GRID (4 columns) -->
+            <div class="wishlist-grid">
+
+
+                <!-- ═══════════════════════════
+                WISHLIST ITEM 1: Leather Jacket
+                ═══════════════════════════ -->
+                <div class="wishlist-card">
+                    <button class="wishlist-remove">&times;</button>
+                    <div class="wishlist-img">
+                        <img src="Images/product-jacket.jpg" alt="Urban Leather Jacket">
+                    </div>
+                    <div class="wishlist-info">
+                        <p class="category">Jacket</p>
+                        <h3>Urban Leather Jacket</h3>
+                        <div class="price">
+                            <span class="current">&#8377;2,499</span>
+                            <span class="old">&#8377;2,999</span>
+                        </div>
+                        <p class="stock-status in-stock">&#x2713; In Stock</p>
+                        <a href="cart.html" class="btn btn-gold btn-sm btn-full">Move to Cart</a>
+                        <p class="date-added">Added on 12 Jan 2025</p>
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════
+                WISHLIST ITEM 2: Streetwear Hoodie
+                ═══════════════════════════ -->
+                <div class="wishlist-card">
+                    <button class="wishlist-remove">&times;</button>
+                    <div class="wishlist-img">
+                        <img src="Images/product-streetwear.jpg" alt="Oversized Street Hoodie">
+                    </div>
+                    <div class="wishlist-info">
+                        <p class="category">Streetwear</p>
+                        <h3>Oversized Street Hoodie</h3>
+                        <div class="price">
+                            <span class="current">&#8377;1,299</span>
+                            <span class="old">&#8377;1,799</span>
+                        </div>
+                        <p class="stock-status in-stock">&#x2713; In Stock</p>
+                        <a href="cart.html" class="btn btn-gold btn-sm btn-full">Move to Cart</a>
+                        <p class="date-added">Added on 18 Jan 2025</p>
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════
+                WISHLIST ITEM 3: Polo (Low Stock)
+                ═══════════════════════════ -->
+                <div class="wishlist-card">
+                    <button class="wishlist-remove">&times;</button>
+                    <div class="wishlist-img">
+                        <img src="Images/product-polo.jpg" alt="Classic Pique Polo">
+                    </div>
+                    <div class="wishlist-info">
+                        <p class="category">Polo</p>
+                        <h3>Classic Pique Polo</h3>
+                        <div class="price">
+                            <span class="current">&#8377;799</span>
+                            <span class="old">&#8377;1,299</span>
+                        </div>
+                        <p class="stock-status low-stock">&#x26A0; Only 3 Left</p>
+                        <a href="cart.html" class="btn btn-gold btn-sm btn-full">Move to Cart</a>
+                        <p class="date-added">Added on 25 Jan 2025</p>
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════
+                WISHLIST ITEM 4: Bag (Out of Stock)
+                ═══════════════════════════ -->
+                <div class="wishlist-card">
+                    <button class="wishlist-remove">&times;</button>
+                    <div class="wishlist-img">
+                        <img src="Images/product-bag.jpg" alt="Executive Leather Bag">
+                    </div>
+                    <div class="wishlist-info">
+                        <p class="category">Bags</p>
+                        <h3>Executive Leather Bag</h3>
+                        <div class="price">
+                            <span class="current">&#8377;1,499</span>
+                            <span class="old">&#8377;1,999</span>
+                        </div>
+                        <p class="stock-status out-of-stock">&#x2717; Out of Stock</p>
+                        <a href="#" class="btn btn-outline btn-sm btn-full" style="color: var(--gray); border-color: var(--border); cursor: not-allowed;">Sold Out</a>
+                        <p class="date-added">Added on 02 Feb 2025</p>
+                    </div>
+                </div>
+
+
+                <!-- ═══════════════════════════════════
+                ✅ TO ADD NEW WISHLIST ITEM:
+                Copy from START to END below.
+                Paste ABOVE this comment inside 
+                .wishlist-grid div.
+                ═══════════════════════════════════ -->
+
+                <!-- === START: COPY FOR NEW WISHLIST ITEM ===
+
+                <div class="wishlist-card">
+                    <button class="wishlist-remove">&times;</button>
+                    <div class="wishlist-img">
+                        <img src="Images/YOUR-IMAGE.jpg" alt="PRODUCT NAME">
+                    </div>
+                    <div class="wishlist-info">
+                        <p class="category">CATEGORY</p>
+                        <h3>PRODUCT NAME</h3>
+                        <div class="price">
+                            <span class="current">&#8377;PRICE</span>
+                            <span class="old">&#8377;OLD PRICE</span>
+                        </div>
+                        <p class="stock-status in-stock">&#x2713; In Stock</p>
+                        <a href="cart.html" class="btn btn-gold btn-sm btn-full">Move to Cart</a>
+                        <p class="date-added">Added on DD MMM YYYY</p>
+                    </div>
+                </div>
+
+                === END: COPY FOR NEW WISHLIST ITEM === -->
+
+
+            </div>
+
+
+            <!-- ============================
+            SHARE WISHLIST SECTION
+            
+            Allows user to share their 
+            wishlist on social media.
+            Premium brands offer this.
+            Creates social engagement.
+            ============================ -->
+            <div class="share-section">
+                <h3>Share Your Wishlist</h3>
+                <p>Let your friends know what you're eyeing</p>
+                <div class="share-links">
+                    <a href="#" title="WhatsApp">&#x1F4AC;</a>
+                    <a href="#" title="Instagram">&#x1F4F7;</a>
+                    <a href="#" title="Twitter">&#x1F426;</a>
+                    <a href="#" title="Copy Link">&#x1F517;</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    CONTINUE BROWSING SECTION
+    
+    Similar to cart's "You might also like".
+    Shows products to fill the wishlist more.
+    =========================================== -->
+
+    <section class="section section-dark">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Continue Browsing</h2>
+                <div class="gold-line"></div>
+                <p>Discover more styles you'll love</p>
+            </div>
+
+            <div class="product-grid">
+
+                <!-- Suggestion 1 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-tshirt.jpg" alt="Premium Cotton Tee">
+                        <span class="sale-badge">New</span>
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">T-Shirt</p>
+                        <h3>Premium Cotton Tee</h3>
+                        <div class="price">
+                            <span class="current">&#8377;599</span>
+                            <span class="old">&#8377;999</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggestion 2 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-jeans.jpg" alt="Slim Fit Jeans">
+                        <span class="sale-badge">-30%</span>
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Jeans</p>
+                        <h3>Straight Fit Dark Jeans</h3>
+                        <div class="price">
+                            <span class="current">&#8377;999</span>
+                            <span class="old">&#8377;1,499</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggestion 3 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="Images/product-office.jpg" alt="Oxford Formal Shirt">
+                        <span class="wishlist-icon">&#x2661;</span>
+                    </div>
+                    <div class="product-info">
+                        <p class="category">Office Wear</p>
+                        <h3>Oxford Formal Shirt</h3>
+                        <div class="price">
+                            <span class="current">&#8377;1,199</span>
+                            <span class="old">&#8377;1,699</span>
+                        </div>
+                        <div class="product-actions">
+                            <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                            <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="Index.html" class="footer-logo">
+                        <img src="Images/Logo.png" alt="RAVION">
+                    </a>
+                    <p>Premium men's fashion brand offering high-quality essentials. Built for modern men who value style,comfort, and confidence.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="products.html">All Products</a></li>
+                        <li><a href="products.html">Polo Shirts</a></li>
+                        <li><a href="products.html">Jackets</a></li>
+                        <li><a href="products.html">Bags</a></li>
+                        <li><a href="products.html">Jeans</a></li>
+                        <li><a href="products.html">Office Wear</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Help</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="feedback.html">Give Feedback</a></li>
+                        <li><a href="pricing.html">Membership</a></li>
+                        <li><a href="testimonials.html">Reviews</a></li>
+                        <li><a href="profile.html">My Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <span class="contact-icon">&#9993;</span>
+                            <span>info@ravion.in</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9742;</span>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9906;</span>
+                            <span>Chandigarh, India</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 RAVION. All Rights Reserved.</p>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

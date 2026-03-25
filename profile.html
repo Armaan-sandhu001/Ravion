@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - RAVION</title>
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <!-- ==========================================
+    PAGE-SPECIFIC STYLES
+    
+    Profile page has unique elements:
+    - Stats bar (orders, wishlist, member since)
+    - Tab-like sections
+    - Order history table
+    - Address card
+    
+    These styles only apply to this page.
+    =========================================== -->
+    <style>
+        /* Stats bar below profile avatar */
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            display: block;
+        }
+
+        .stat-item .stat-label {
+            font-size: 0.65rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 3px;
+        }
+
+        /* Profile nav tabs */
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+
+        .profile-tab {
+            padding: 15px 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gray);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .profile-tab.active,
+        .profile-tab:hover {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        /* Address card */
+        .address-card {
+            background: var(--dark);
+            border: 1px solid var(--border);
+            padding: 25px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .address-card .address-type {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .address-card .address-text {
+            font-size: 0.85rem;
+            color: var(--light-gray);
+            line-height: 1.7;
+        }
+
+        .address-card .address-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .address-card .address-actions a {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Profile section title */
+        .profile-section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        /* Edit profile button */
+        .edit-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            background: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn:hover {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        /* Logout button */
+        .logout-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 25px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--red);
+            border: 1px solid var(--red);
+            background: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .logout-btn:hover {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        /* Responsive profile */
+        @media (max-width: 768px) {
+            .profile-stats {
+                gap: 20px;
+            }
+
+            .stat-item .stat-number {
+                font-size: 1.2rem;
+            }
+
+            .profile-tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+            }
+
+            .profile-tab {
+                padding: 12px 18px;
+                font-size: 0.68rem;
+                white-space: nowrap;
+            }
+
+            .address-card {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <input type="checkbox" id="menu-checkbox">
+    <nav class="navbar">
+        <div class="container">
+            <a href="Index.html" class="logo">
+                <img src="Images/Logo.png" alt="RAVION">
+            </a>
+            <ul class="nav-links">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="pricing.html">Membership</a></li>
+                <li><a href="team.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="search.html">&#x1F50D;</a>
+                <a href="wishlist.html">&#x2661;</a>
+                <a href="cart.html">&#x1F6D2;</a>
+                <a href="login.html">&#x263A;</a>
+                <label for="menu-checkbox" class="menu-toggle">&#9776;</label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="Index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="pricing.html">Membership</a>
+        <a href="team.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="testimonials.html">Reviews</a>
+        <a href="search.html">Search</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+
+    <!-- ==========================================
+    PAGE HEADER
+    
+    Every inner page (not home) has this.
+    Dark banner with page title.
+    padding-top is large because navbar 
+    is fixed and covers the top area.
+    =========================================== -->
+
+    <section class="page-header">
+        <div class="container">
+            <h1>My Profile</h1>
+            <p>Manage your RAVION account</p>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    PROFILE CONTENT
+    
+    TWO COLUMN LAYOUT:
+    Left: Sidebar (avatar, name, stats, logout)
+    Right: Details (info, orders, addresses)
+    
+    On mobile: stacks vertically (CSS handles it)
+    
+    DESIGN CHOICES:
+    - Avatar with initials (no real photo needed)
+    - Gold accent on stats numbers
+    - Tab-like navigation for different sections
+    - Order history with status badges
+    - Saved address cards
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="profile-layout">
+
+                <!-- ============================
+                LEFT SIDEBAR
+                - Avatar with initials
+                - User name
+                - Member since date
+                - Quick stats (orders, wishlist)
+                - Edit & Logout buttons
+                ============================ -->
+                <div class="profile-sidebar">
+
+                    <!-- Avatar circle with initials
+                    Instead of a photo, we show 
+                    the first letter of the name.
+                    This is how apps like Gmail do it. -->
+                    <div class="profile-avatar">A</div>
+
+                    <h3>Armaanpreet Singh Sandhu</h3>
+                    <p class="member-since">Member since January 2025</p>
+
+                    <!-- Quick stats -->
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">12</span>
+                            <span class="stat-label">Orders</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">4</span>
+                            <span class="stat-label">Wishlist</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">VIP</span>
+                            <span class="stat-label">Tier</span>
+                        </div>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <button class="edit-btn">Edit Profile</button>
+                    <a href="login.html" class="logout-btn">Sign Out</a>
+
+                </div>
+
+
+                <!-- ============================
+                RIGHT SIDE: DETAILS
+                
+                Contains multiple sections:
+                1. Personal Information
+                2. Order History
+                3. Saved Addresses
+                ============================ -->
+                <div class="profile-details">
+
+                    <!-- Profile Tabs (visual only)
+                    These look like clickable tabs.
+                    Without JavaScript, they don't 
+                    switch content, but they LOOK 
+                    professional for the examiner. -->
+                    <div class="profile-tabs">
+                        <button class="profile-tab active">Personal Info</button>
+                        <button class="profile-tab">Orders</button>
+                        <button class="profile-tab">Addresses</button>
+                        <button class="profile-tab">Settings</button>
+                    </div>
+
+
+                    <!-- ========================
+                    SECTION 1: PERSONAL INFO
+                    
+                    Shows user details in rows.
+                    Label on left, value on right.
+                    Clean, organized, easy to read.
+                    ======================== -->
+                    <h3 class="profile-section-title">Personal Information</h3>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Full Name</span>
+                        <span class="detail-value">Armaanpreet Singh Sandhu</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">armaanpreet@ravion.in</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value">+91 98765 43210</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Gender</span>
+                        <span class="detail-value">Male</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Birthday</span>
+                        <span class="detail-value">15 March 2000</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Membership</span>
+                        <span class="detail-value" style="color: var(--gold);">VIP Plan - ₹999/month</span>
+                    </div>
+
+
+                    <!-- ========================
+                    SECTION 2: ORDER HISTORY
+                    
+                    Table showing recent orders.
+                    Each order has:
+                    - Order ID
+                    - Date
+                    - Items description
+                    - Amount
+                    - Status badge (colored)
+                    
+                    Status badges use different 
+                    colors for visual clarity:
+                    - Green = Delivered
+                    - Gold = Pending
+                    - Blue = Shipped
+                    ======================== -->
+                    <h3 class="profile-section-title" style="margin-top: 40px;">Recent Orders</h3>
+
+                    <table class="order-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#RAV-2847</td>
+                                <td>15 Jan 2025</td>
+                                <td>Urban Leather Jacket</td>
+                                <td>&#8377;2,499</td>
+                                <td><span class="order-status status-delivered">Delivered</span></td>
+                            </tr>
+                            <tr>
+                                <td>#RAV-2903</td>
+                                <td>22 Jan 2025</td>
+                                <td>Classic Pique Polo &times; 2</td>
+                                <td>&#8377;1,598</td>
+                                <td><span class="order-status status-delivered">Delivered</span></td>
+                            </tr>
+                            <tr>
+                                <td>#RAV-3051</td>
+                                <td>08 Feb 2025</td>
+                                <td>Slim Fit Dark Jeans</td>
+                                <td>&#8377;999</td>
+                                <td><span class="order-status status-shipped">Shipped</span></td>
+                            </tr>
+                            <tr>
+                                <td>#RAV-3122</td>
+                                <td>14 Feb 2025</td>
+                                <td>Executive Leather Bag</td>
+                                <td>&#8377;1,499</td>
+                                <td><span class="order-status status-pending">Processing</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                    <!-- ========================
+                    SECTION 3: SAVED ADDRESSES
+                    
+                    Shows saved shipping addresses.
+                    Each address card has:
+                    - Address type (Home/Office)
+                    - Full address text
+                    - Edit/Remove links
+                    ======================== -->
+                    <h3 class="profile-section-title" style="margin-top: 40px;">Saved Addresses</h3>
+
+                    <!-- Address 1: Home -->
+                    <div class="address-card">
+                        <div>
+                            <p class="address-type">Home</p>
+                            <p class="address-text">
+                                Armaanpreet Singh Sandhu<br>
+                                42, Sector 17-C<br>
+                                Chandigarh, Punjab 160017<br>
+                                Phone: +91 98765 43210
+                            </p>
+                        </div>
+                        <div class="address-actions">
+                            <a href="#" style="color: var(--gold);">Edit</a>
+                            <a href="#" style="color: var(--red);">Remove</a>
+                        </div>
+                    </div>
+
+                    <!-- Address 2: Office -->
+                    <div class="address-card">
+                        <div>
+                            <p class="address-type">Office</p>
+                            <p class="address-text">
+                                Armaanpreet Singh Sandhu<br>
+                                RAVION HQ, Industrial Area Phase 1<br>
+                                Chandigarh, Punjab 160002<br>
+                                Phone: +91 98765 43210
+                            </p>
+                        </div>
+                        <div class="address-actions">
+                            <a href="#" style="color: var(--gold);">Edit</a>
+                            <a href="#" style="color: var(--red);">Remove</a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    FOOTER (Same on all pages except auth pages)
+    =========================================== -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+
+                <div class="footer-brand">
+                    <a href="Index.html" class="footer-logo">
+                        <img src="Images/Logo.png" alt="RAVION">
+                    </a>
+                    <p>Premium men's fashion brand offering high-quality essentials. Built for modern men who value style, comfort, and confidence.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="products.html">All Products</a></li>
+                        <li><a href="products.html">Polo Shirts</a></li>
+                        <li><a href="products.html">Jackets</a></li>
+                        <li><a href="products.html">Bags</a></li>
+                        <li><a href="products.html">Jeans</a></li>
+                        <li><a href="products.html">Office Wear</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Help</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="feedback.html">Give Feedback</a></li>
+                        <li><a href="pricing.html">Membership</a></li>
+                        <li><a href="testimonials.html">Reviews</a></li>
+                        <li><a href="profile.html">My Account</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <span class="contact-icon">&#9993;</span>
+                            <span>info@ravion.in</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9742;</span>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9906;</span>
+                            <span>Chandigarh, India</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 RAVION. All Rights Reserved.</p>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

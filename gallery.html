@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - RAVION Lookbook</title>
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <!-- ==========================================
+    PAGE-SPECIFIC STYLES
+    
+    Gallery page has unique elements:
+    - Masonry-style mixed grid
+    - Full-width hero banner
+    - Category filter tabs
+    - Image lightbox overlay (CSS only)
+    - Gallery stats bar
+    - Behind the scenes section
+    =========================================== -->
+    <style>
+        /* Gallery hero banner */
+        .gallery-hero {
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background-image: url('Images/gallery2.jpg');
+            background-size: cover;
+            background-position: center;
+            margin-top: 70px;
+        }
+
+        .gallery-hero .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+
+        .gallery-hero .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .gallery-hero h1 {
+            font-size: 3rem;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .gallery-hero p {
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin: 0 auto;
+            max-width: none;
+        }
+
+        /* Gallery stats bar */
+        .gallery-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            padding: 35px 0;
+            background: var(--dark);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .gallery-stat {
+            text-align: center;
+        }
+
+        .gallery-stat .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+            display: block;
+        }
+
+        .gallery-stat .stat-label {
+            font-size: 0.65rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 5px;
+        }
+
+        /* Gallery filter tabs */
+        .gallery-filters {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 45px;
+            flex-wrap: wrap;
+        }
+
+        .gallery-filter-btn {
+            padding: 10px 22px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--gray);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-filter-btn:hover,
+        .gallery-filter-btn.active {
+            background: var(--gold);
+            color: var(--black);
+            border-color: var(--gold);
+        }
+
+        /* Masonry mixed grid layout 
+        Uses grid-row: span to create 
+        tall and short items mixed together.
+        This creates a dynamic Pinterest-like layout. */
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        /* Make some items taller */
+        .masonry-grid .gallery-item:nth-child(1) {
+            grid-row: span 2;
+            height: auto;
+        }
+
+        .masonry-grid .gallery-item:nth-child(4) {
+            grid-row: span 2;
+            height: auto;
+        }
+
+        .masonry-grid .gallery-item:nth-child(7) {
+            grid-column: span 2;
+            height: 350px;
+        }
+
+        .masonry-grid .gallery-item {
+            height: 300px;
+        }
+
+        /* Gallery caption on hover */
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 20px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+
+        .gallery-caption h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
+        }
+
+        .gallery-caption p {
+            font-size: 0.7rem;
+            color: var(--gold);
+            letter-spacing: 1px;
+            margin: 0;
+            max-width: none;
+        }
+
+        /* Full width showcase image */
+        .showcase-section {
+            position: relative;
+            height: 60vh;
+            overflow: hidden;
+        }
+
+        .showcase-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .showcase-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .showcase-overlay h2 {
+            font-size: 2.5rem;
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+        }
+
+        .showcase-overlay p {
+            font-size: 0.85rem;
+            color: var(--gold);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin: 0 auto 25px auto;
+            max-width: none;
+        }
+
+        /* Behind the scenes grid */
+        .bts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .bts-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .bts-card:hover {
+            border-color: var(--gold);
+        }
+
+        .bts-card .bts-image {
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .bts-card .bts-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .bts-card:hover .bts-image img {
+            transform: scale(1.08);
+        }
+
+        .bts-card .bts-info {
+            padding: 22px;
+        }
+
+        .bts-card .bts-info h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .bts-card .bts-info p {
+            font-size: 0.78rem;
+            color: var(--gray);
+            line-height: 1.7;
+            margin: 0;
+            max-width: none;
+        }
+
+        .bts-card .bts-info .bts-tag {
+            display: inline-block;
+            font-size: 0.62rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        /* Instagram CTA section */
+        .instagram-cta {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--card);
+            border: 1px solid var(--border);
+        }
+
+        .instagram-cta .insta-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        .instagram-cta h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+        }
+
+        .instagram-cta p {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin: 0 auto 20px auto;
+            max-width: none;
+        }
+
+        .instagram-cta .insta-handle {
+            font-size: 0.85rem;
+            color: var(--gold);
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-hero {
+                height: 35vh;
+                margin-top: 70px;
+            }
+
+            .gallery-hero h1 {
+                font-size: 2rem;
+                letter-spacing: 6px;
+            }
+
+            .gallery-stats {
+                gap: 30px;
+                padding: 25px 10px;
+            }
+
+            .gallery-stat .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .masonry-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .masonry-grid .gallery-item:nth-child(1),
+            .masonry-grid .gallery-item:nth-child(4) {
+                grid-row: span 1;
+            }
+
+            .masonry-grid .gallery-item:nth-child(7) {
+                grid-column: span 1;
+            }
+
+            .masonry-grid .gallery-item {
+                height: 220px;
+            }
+
+            .showcase-section {
+                height: 40vh;
+            }
+
+            .showcase-overlay h2 {
+                font-size: 1.5rem;
+                letter-spacing: 4px;
+            }
+
+            .bts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-hero h1 {
+                font-size: 1.5rem;
+                letter-spacing: 4px;
+            }
+
+            .gallery-stats {
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+
+            .gallery-stat .stat-number {
+                font-size: 1.2rem;
+            }
+
+            .gallery-stat .stat-label {
+                font-size: 0.58rem;
+            }
+
+            .masonry-grid .gallery-item {
+                height: 180px;
+            }
+
+            .showcase-section {
+                height: 35vh;
+            }
+
+            .showcase-overlay h2 {
+                font-size: 1.2rem;
+            }
+
+            .gallery-caption h4 {
+                font-size: 0.7rem;
+            }
+
+            .bts-card .bts-image {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <input type="checkbox" id="menu-checkbox">
+    <nav class="navbar">
+        <div class="container">
+            <a href="Index.html" class="logo">
+                <img src="Images/Logo.png" alt="RAVION">
+            </a>
+            <ul class="nav-links">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="pricing.html">Membership</a></li>
+                <li><a href="team.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="search.html">&#x1F50D;</a>
+                <a href="wishlist.html">&#x2661;</a>
+                <a href="cart.html">&#x1F6D2;</a>
+                <a href="login.html">&#x263A;</a>
+                <label for="menu-checkbox" class="menu-toggle">&#9776;</label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="Index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="pricing.html">Membership</a>
+        <a href="team.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="testimonials.html">Reviews</a>
+        <a href="search.html">Search</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+
+    <!-- ==========================================
+    GALLERY HERO BANNER
+    
+    Cinematic opening for the gallery page.
+    Full width image with dark overlay.
+    Sets the mood: this is a LOOKBOOK, 
+    not just a photo dump.
+    =========================================== -->
+
+    <section class="gallery-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Lookbook</h1>
+            <p>The RAVION Aesthetic</p>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    GALLERY STATS BAR
+    
+    Shows brand stats to impress visitors.
+    Creates credibility and scale.
+    =========================================== -->
+
+    <div class="gallery-stats">
+        <div class="gallery-stat">
+            <span class="stat-number">50+</span>
+            <span class="stat-label">Photoshoots</span>
+        </div>
+        <div class="gallery-stat">
+            <span class="stat-number">200+</span>
+            <span class="stat-label">Products</span>
+        </div>
+        <div class="gallery-stat">
+            <span class="stat-number">12</span>
+            <span class="stat-label">Collections</span>
+        </div>
+        <div class="gallery-stat">
+            <span class="stat-number">5K+</span>
+            <span class="stat-label">Happy Customers</span>
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+    MAIN GALLERY SECTION
+    
+    Masonry-style mixed grid.
+    Some images are tall (span 2 rows).
+    One image is wide (span 2 columns).
+    Creates a dynamic, editorial feel.
+    
+    Each image has:
+    - Zoom on hover
+    - Dark overlay on hover
+    - Caption slides up from bottom
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>The Collection</h2>
+                <div class="gold-line"></div>
+                <p>Every piece tells a story</p>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="gallery-filters">
+                <button class="gallery-filter-btn active">All</button>
+                <button class="gallery-filter-btn">Polos</button>
+                <button class="gallery-filter-btn">Jackets</button>
+                <button class="gallery-filter-btn">Streetwear</button>
+                <button class="gallery-filter-btn">Office</button>
+                <button class="gallery-filter-btn">Bags</button>
+                <button class="gallery-filter-btn">Campaign</button>
+            </div>
+
+            <!-- Masonry Gallery Grid -->
+            <div class="masonry-grid">
+
+                <!-- Image 1 (TALL - spans 2 rows) -->
+                <div class="gallery-item">
+                    <img src="Images/product-jacket.jpg" alt="Leather Jacket Editorial">
+                    <div class="gallery-overlay">
+                        <span>View</span>
+                    </div>
+                    <div class="gallery-caption">
+                        <h4>Urban Edge</h4>
+                        <p>Leather Jacket Collection</p>
+                    </div>
+                </div>
+
+                <!-- Image 2 -->
+                <div class="gallery-item">
+                    <img src="Images/product-polo.jpg" alt="Polo Photoshoot">
+                    <div class="gallery-overlay">
+                        <span>View</span>
+                    </div>
+                    <div class="gallery-caption">
+                        <h4>Classic Lines</h4>
+                        <p>Polo Collection</p>
+                    </div>
+                </div>
+
+                <!-- Image 3 -->
+                <div class="gallery-item">
+                    <img src="Images/gallery1.jpg" alt="RAVION Lookbook">
+                    <div class="gallery-overlay">
+                        <span>View</span>
+                    </div>
+                    <div class="gallery-caption">
+                        <h4>Street Ready</h4>
+                        <p>Spring 2025 Campaign</p>
+                    </div>
+                </div>
+
+                <!-- Image 4 (TALL - spans 2 rows) -->
+                <div class="gallery-item">
+                    <img src="Images/product-streetwear.jpg" alt="Streetwear Editorial">
+                    <div class="gallery-overlay">
+                        <span>View</span>
+                    </div>
+                    <div class="gallery-caption">
+                        <h4>Street Culture</h4>
+                        <p>Streetwear Essentials</p>
+                    </div>
+                </div>
+
+                <!-- Image 5 -->
+                <div class="gallery-item">
+                    <img src="Images/product-bag.jpg" alt="Leather Bag">
+                    <div class="gallery-overlay">
+                        <span>View</span>
+                    </div>
+                    <div class="gallery-caption">
+                        <h4>Carry Power</h4>
+                        <p>Bags Collection</p>
+                    </div>
+                </div>
+
+                <!-- Image 6 -->
+                <div class="gallery-item">
+                    <img src="Images/gallery3.jpg" alt="RAVION Studio">
+                    <div class="gallery-overlay">
+                        <span>View</span>
+                    </div>
+                    <div class="gallery-caption">
+                        <h4>Studio Session</h4>
+                        <p>Behind the Lens</p>
+                    </div>
+                </div>
+
+                <!-- Image 7 (WIDE - spans 2 columns) -->
+                <div class="gallery-item">
+                    <img src="Images/gallery4.jpg" alt="RAVION Campaign">
+                    <div class="gallery-overlay">
+                        <span>View</span>
+                    </div>
+                    <div class="gallery-caption">
+                        <h4>Built for Modern Men</h4>
+                        <p>RAVION 2025 Campaign</p>
+                    </div>
+                </div>
+
+                <!-- Image 8 -->
+                <div class="gallery-item">
+                    <img src="Images/product-office.jpg" alt="Office Wear">
+                    <div class="gallery-overlay">
+                        <span>View</span>
+                    </div>
+                    <div class="gallery-caption">
+                        <h4>Office Power</h4>
+                        <p>Formal Collection</p>
+                    </div>
+                </div>
+
+                <!-- Image 9 -->
+                <div class="gallery-item">
+                    <img src="Images/product-shirt.jpg" alt="Casual Shirt">
+                    <div class="gallery-overlay">
+                        <span>View</span>
+                    </div>
+                    <div class="gallery-caption">
+                        <h4>Casual Friday</h4>
+                        <p>Shirts Collection</p>
+                    </div>
+                </div>
+
+                <!-- Image 10 -->
+                <div class="gallery-item">
+                    <img src="Images/product-tshirt.jpg" alt="Premium Tee">
+                    <div class="gallery-overlay">
+                        <span>View</span>
+                    </div>
+                    <div class="gallery-caption">
+                        <h4>Essential Tee</h4>
+                        <p>Everyday Basics</p>
+                    </div>
+                </div>
+
+                <!-- Image 11 -->
+                <div class="gallery-item">
+                    <img src="Images/product-jeans.jpg" alt="Dark Jeans">
+                    <div class="gallery-overlay">
+                        <span>View</span>
+                    </div>
+                    <div class="gallery-caption">
+                        <h4>Dark Denim</h4>
+                        <p>Jeans Collection</p>
+                    </div>
+                </div>
+
+                <!-- Image 12 -->
+                <div class="gallery-item">
+                    <img src="Images/gallery2.jpg" alt="RAVION Lifestyle">
+                    <div class="gallery-overlay">
+                        <span>View</span>
+                    </div>
+                    <div class="gallery-caption">
+                        <h4>Lifestyle</h4>
+                        <p>The RAVION Man</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+    
+    
+
+    <!-- ==========================================
+    FULL WIDTH SHOWCASE
+    
+    Cinematic full-width image break.
+    Creates visual breathing room.
+    Like a magazine editorial spread.
+    =========================================== -->
+
+    <section class="showcase-section">
+        <img src="Images/hero-bg.jpg" alt="RAVION Showcase">
+        <div class="showcase-overlay">
+            <h2>Wear the Statement</h2>
+            <p>Every piece crafted with intention</p>
+            <a href="products.html" class="btn btn-gold">Shop the Look</a>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    BEHIND THE SCENES SECTION
+    
+    Shows the making of RAVION's products.
+    Creates brand authenticity and connection.
+    Premium brands always show BTS content.
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Behind the Scenes</h2>
+                <div class="gold-line"></div>
+                <p>From concept to collection</p>
+            </div>
+
+            <div class="bts-grid">
+
+                <!-- BTS 1: Fabric Selection -->
+                <div class="bts-card">
+                    <div class="bts-image">
+                        <img src="Images/gallery1.jpg" alt="Fabric Selection">
+                    </div>
+                    <div class="bts-info">
+                        <span class="bts-tag">Process</span>
+                        <h3>Fabric Selection</h3>
+                        <p>Every collection begins with sourcing the finest fabrics. We test over 50 fabric samples before selecting the ones that meet our standards of softness, durability, and drape.</p>
+                    </div>
+                </div>
+
+                <!-- BTS 2: Design Studio -->
+                <div class="bts-card">
+                    <div class="bts-image">
+                        <img src="Images/gallery3.jpg" alt="Design Studio">
+                    </div>
+                    <div class="bts-info">
+                        <span class="bts-tag">Design</span>
+                        <h3>Design Studio</h3>
+                        <p>Our design team sketches, prototypes, and refines every piece. Each garment goes through multiple rounds of fitting to ensure the perfect modern fit that RAVION is known for.</p>
+                    </div>
+                </div>
+
+                <!-- BTS 3: Photo Studio -->
+                <div class="bts-card">
+                    <div class="bts-image">
+                        <img src="Images/gallery4.jpg" alt="Photo Studio">
+                    </div>
+                    <div class="bts-info">
+                        <span class="bts-tag">Campaign</span>
+                        <h3>The Photoshoot</h3>
+                        <p>Our lookbook shoots capture the essence of the RAVION man — confident, modern, and effortlessly stylish. Every image is crafted to inspire your next outfit.</p>
+                    </div>
+                </div>
+
+                <!-- BTS 4: Quality Check -->
+                <div class="bts-card">
+                  <div class="bts-image">
+                        <img src="Images/gallery2.jpg" alt="Quality Control">
+                    </div>
+                    <div class="bts-info">
+                        <span class="bts-tag">Quality</span>
+                        <h3>Quality Control</h3>
+                        <p>Before any product reaches you, it passes through a rigorous quality check. We inspect every stitch, button, and seam to ensure RAVION's promise of premium quality.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    INSTAGRAM CTA
+    
+    Encourages visitors to follow on Instagram.
+    Social media is crucial for fashion brands.
+    =========================================== -->
+
+    <section class="section section-dark">
+        <div class="container">
+
+            <div class="instagram-cta">
+                <div class="insta-icon">&#x1F4F7;</div>
+                <h3>Follow Us on Instagram</h3>
+                <p>Get daily style inspiration and early access to new drops</p>
+                <a href="#" class="insta-handle">@ravion.official</a>
+                <br><br>
+                <a href="#" class="btn btn-outline btn-sm">Follow Now</a>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="Index.html" class="footer-logo">
+                        <img src="Images/Logo.png" alt="RAVION">
+                    </a>
+                    <p>Premium men's fashion brand offering high-quality essentials. Built for modern men who value style, comfort, and confidence.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="products.html">All Products</a></li>
+                        <li><a href="products.html">Polo Shirts</a></li>
+                        <li><a href="products.html">Jackets</a></li>
+                        <li><a href="products.html">Bags</a></li>
+                        <li><a href="products.html">Jeans</a></li>
+                        <li><a href="products.html">Office Wear</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Help</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="feedback.html">Give Feedback</a></li>
+                        <li><a href="pricing.html">Membership</a></li>
+                        <li><a href="testimonials.html">Reviews</a></li>
+                        <li><a href="profile.html">My Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <span class="contact-icon">&#9993;</span>
+                            <span>info@ravion.in</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9742;</span>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9906;</span>
+                            <span>Chandigarh, India</span>
+                        </li>
+                    </ul>
+                      </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 RAVION. All Rights Reserved.</p>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

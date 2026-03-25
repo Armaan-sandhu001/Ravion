@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Reviews - RAVION</title>
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <!-- ==========================================
+    PAGE-SPECIFIC STYLES
+    
+    Testimonials page is the TRUST page.
+    Different from feedback.html:
+    - Feedback = write reviews
+    - Testimonials = showcase best reviews
+    
+    This page has:
+    - Hero quote section
+    - Stats bar
+    - Featured review (big card)
+    - Review grid (all reviews)
+    - Customer photos section
+    - CTA to write review
+    =========================================== -->
+    <style>
+        /* Hero quote section */
+        .testimonial-hero {
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background-image: url('Images/gallery1.jpg');
+            background-size: cover;
+            background-position: center;
+            margin-top: 70px;
+        }
+
+        .testimonial-hero .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1;
+        }
+
+        .testimonial-hero .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            padding: 0 25px;
+        }
+
+        .testimonial-hero .big-quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            color: var(--gold);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .testimonial-hero h1 {
+            font-size: 2.2rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .testimonial-hero p {
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin: 0 auto;
+            max-width: none;
+        }
+
+        /* Trust stats bar */
+        .trust-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            padding: 40px 0;
+            background: var(--dark);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .trust-stat {
+            text-align: center;
+        }
+
+        .trust-stat .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--gold);
+            display: block;
+        }
+
+        .trust-stat .stat-label {
+            font-size: 0.65rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 5px;
+        }
+
+        /* Featured review - big spotlight card */
+        .featured-review {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 50px 45px;
+            max-width: 800px;
+            margin: 0 auto 60px auto;
+            text-align: center;
+            position: relative;
+        }
+
+        .featured-review::before {
+            content: '"';
+            font-family: 'Playfair Display', serif;
+            font-size: 6rem;
+            color: var(--gold);
+            position: absolute;
+            top: 10px;
+            left: 30px;
+            line-height: 1;
+            opacity: 0.3;
+        }
+
+        .featured-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .featured-review .featured-stars {
+            color: var(--gold);
+            font-size: 1.1rem;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+        }
+
+        .featured-review .featured-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: var(--white);
+            line-height: 1.9;
+            font-style: italic;
+            margin: 0 auto 25px auto;
+            max-width: 600px;
+        }
+
+        .featured-review .featured-author {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: 1px;
+        }
+
+        .featured-review .featured-meta {
+            font-size: 0.72rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        .featured-review .featured-product {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 5px 15px;
+            border: 1px solid var(--border);
+            font-size: 0.68rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* Enhanced testimonial card */
+        .testi-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 35px 30px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .testi-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .testi-card .quote-icon {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--gold);
+            opacity: 0.2;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .testi-card .testi-stars {
+            color: var(--gold);
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+        }
+
+        .testi-card .testi-text {
+            font-size: 0.88rem;
+            color: var(--light-gray);
+            line-height: 1.8;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .testi-card .testi-product {
+            font-size: 0.65rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .testi-card .testi-footer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .testi-card .testi-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .testi-card .testi-author-info h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .testi-card .testi-author-info .testi-location {
+            font-size: 0.68rem;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+
+        .testi-card .verified {
+            font-size: 0.6rem;
+            color: var(--green);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-left: auto;
+        }
+
+        /* Customer photos section */
+        .customer-photos {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+        }
+
+        .customer-photo {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .customer-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .customer-photo:hover img {
+            transform: scale(1.1);
+        }
+
+        .customer-photo .photo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .customer-photo:hover .photo-overlay {
+            opacity: 1;
+        }
+
+        .customer-photo .photo-overlay .photo-stars {
+            color: var(--gold);
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .customer-photo .photo-overlay .photo-name {
+            font-size: 0.68rem;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* Write review CTA */
+        .review-cta {
+            background: var(--card);
+            border: 1px solid var(--gold);
+            padding: 50px 40px;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .review-cta h3 {
+            font-size: 1.3rem;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .review-cta p {
+            font-size: 0.82rem;
+            color: var(--gray);
+            margin: 0 auto 25px auto;
+            max-width: none;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 768px) {
+            .testimonial-hero {
+                height: 40vh;
+            }
+
+            .testimonial-hero h1 {
+                font-size: 1.6rem;
+                letter-spacing: 4px;
+            }
+
+            .testimonial-hero .big-quote {
+                font-size: 3rem;
+            }
+
+            .trust-stats {
+                gap: 25px;
+                flex-wrap: wrap;
+                padding: 30px 10px;
+            }
+
+            .trust-stat .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .featured-review {
+                padding: 35px 25px;
+            }
+
+            .featured-review .featured-text {
+                font-size: 1.05rem;
+            }
+
+            .featured-review::before {
+                font-size: 4rem;
+                left: 15px;
+            }
+
+            .customer-photos {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .customer-photo {
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .testimonial-hero {
+                height: 35vh;
+            }
+
+            .testimonial-hero h1 {
+                font-size: 1.3rem;
+            }
+
+            .trust-stats {
+                gap: 15px;
+            }
+
+            .trust-stat .stat-number {
+                font-size: 1.2rem;
+            }
+
+            .trust-stat .stat-label {
+                font-size: 0.58rem;
+            }
+
+            .featured-review .featured-text {
+                font-size: 0.95rem;
+            }
+
+            .customer-photos {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .customer-photo {
+                height: 130px;
+            }
+
+            .review-cta {
+                padding: 35px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <input type="checkbox" id="menu-checkbox">
+    <nav class="navbar">
+        <div class="container">
+            <a href="Index.html" class="logo">
+                <img src="Images/Logo.png" alt="RAVION">
+            </a>
+            <ul class="nav-links">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="pricing.html">Membership</a></li>
+                <li><a href="team.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="search.html">&#x1F50D;</a>
+                <a href="wishlist.html">&#x2661;</a>
+                <a href="cart.html">&#x1F6D2;</a>
+                <a href="login.html">&#x263A;</a>
+                <label for="menu-checkbox" class="menu-toggle">&#9776;</label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="Index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="pricing.html">Membership</a>
+        <a href="team.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="testimonials.html">Reviews</a>
+        <a href="search.html">Search</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+
+    <!-- ==========================================
+    TESTIMONIAL HERO
+    =========================================== -->
+
+    <section class="testimonial-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="big-quote">"</div>
+            <h1>Customer Stories</h1>
+            <p>Real reviews from real men</p>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    TRUST STATS BAR
+    =========================================== -->
+
+    <div class="trust-stats">
+        <div class="trust-stat">
+            <span class="stat-number">4.7</span>
+            <span class="stat-label">Average Rating</span>
+        </div>
+        <div class="trust-stat">
+            <span class="stat-number">284</span>
+            <span class="stat-label">Total Reviews</span>
+        </div>
+        <div class="trust-stat">
+            <span class="stat-number">96%</span>
+            <span class="stat-label">Recommend</span>
+        </div>
+        <div class="trust-stat">
+            <span class="stat-number">5K+</span>
+            <span class="stat-label">Happy Customers</span>
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+    FEATURED REVIEW
+    
+    One spotlight review displayed large.
+    The BEST review gets special treatment.
+    Creates strong first impression.
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="featured-review">
+                <span class="featured-label">&#9733; Featured Review</span>
+                <div class="featured-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p class="featured-text">
+                    "I've been searching for a brand that combines real quality with a price I can actually afford. RAVION is exactly that. The leather jacket I bought feels like something worth three times the price. The stitching, the fit, the weight of the leather — everything feels intentional. This is my brand now."
+                </p>
+                <p class="featured-author">Vikram Singh</p>
+                <p class="featured-meta">Mumbai &bull; Verified Purchase &bull; January 2025</p>
+                <span class="featured-product">Urban Leather Jacket</span>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    ALL TESTIMONIALS GRID
+    
+    9 customer review cards.
+    Each card has:
+    - Decorative quote icon
+    - Star rating
+    - Product purchased
+    - Review text
+    - Author avatar (initial)
+    - Name + Location
+    - Verified badge
+    =========================================== -->
+
+    <section class="section section-dark">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>What Our Customers Say</h2>
+                <div class="gold-line"></div>
+            </div>
+
+            <div class="testimonial-grid">
+
+                <!-- Review 1 -->
+                <div class="testi-card">
+                    <div class="quote-icon">"</div>
+                    <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <span class="testi-product">Classic Pique Polo</span>
+                    <p class="testi-text">"The quality of fabric is unmatched at this price point. I've tried many brands but RAVION genuinely delivers premium quality. The polo fits perfectly and the pique texture looks classy. My go-to brand now."</p>
+                    <div class="testi-footer">
+                        <div class="testi-avatar">R</div>
+                        <div class="testi-author-info">
+                            <h4>Rahul Sharma</h4>
+                            <p class="testi-location">New Delhi</p>
+                        </div>
+                        <span class="verified">&#10003; Verified</span>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="testi-card">
+                    <div class="quote-icon">"</div>
+                    <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <span class="testi-product">Executive Leather Bag</span>
+                    <p class="testi-text">"Bought this bag for my husband's birthday. The packaging was premium, the leather smells amazing, and the build quality is outstanding. He uses it daily for office and gets compliments every time."</p>
+                    <div class="testi-footer">
+                        <div class="testi-avatar">P</div>
+                        <div class="testi-author-info">
+                            <h4>Priya Kaur</h4>
+                            <p class="testi-location">Chandigarh</p>
+                        </div>
+                        <span class="verified">&#10003; Verified</span>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="testi-card">
+                    <div class="quote-icon">"</div>
+                    <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+                    <span class="testi-product">Oxford Formal Shirt</span>
+                    <p class="testi-text">"Finally a brand that understands modern men's fashion. The office wear collection is classy yet comfortable. Getting compliments every day at work. Only wish there were more color options."</p>
+                    <div class="testi-footer">
+                        <div class="testi-avatar">A</div>
+                        <div class="testi-author-info">
+                            <h4>Arjun Patel</h4>
+                            <p class="testi-location">Bangalore</p>
+                        </div>
+                        <span class="verified">&#10003; Verified</span>
+                    </div>
+                </div>
+
+                <!-- Review 4 -->
+                <div class="testi-card">
+                    <div class="quote-icon">"</div>
+                    <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <span class="testi-product">Slim Fit Dark Jeans</span>
+                    <p class="testi-text">"These jeans are incredible. The denim quality is premium, the dark wash hasn't faded even after 10+ washes. The slim fit is perfect — not too tight, great stretch. Already ordered another pair in black."</p>
+                    <div class="testi-footer">
+                        <div class="testi-avatar">K</div>
+                        <div class="testi-author-info">
+                            <h4>Karan Mehta</h4>
+                            <p class="testi-location">Pune</p>
+                        </div>
+                        <span class="verified">&#10003; Verified</span>
+                    </div>
+                </div>
+
+                <!-- Review 5 -->
+                <div class="testi-card">
+                    <div class="quote-icon">"</div>
+                    <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <span class="testi-product">Oversized Street Hoodie</span>
+                    <p class="testi-text">"This hoodie is FIRE! The oversized fit is exactly what I wanted. Material is thick, warm, and the gold RAVION branding is subtle but classy. Already my most worn piece. 10/10 would recommend to everyone."</p>
+                    <div class="testi-footer">
+                        <div class="testi-avatar">A</div>
+                        <div class="testi-author-info">
+                            <h4>Amit Verma</h4>
+                            <p class="testi-location">Lucknow</p>
+                        </div>
+                        <span class="verified">&#10003; Verified</span>
+                    </div>
+                </div>
+
+                <!-- Review 6 -->
+                <div class="testi-card">
+                    <div class="quote-icon">"</div>
+                    <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <span class="testi-product">Textured Knit Polo</span>
+                    <p class="testi-text">"Second polo I've bought from RAVION. The textured knit fabric feels premium and looks sharp. I wore it to a casual meeting and got three compliments. RAVION understands what modern men need."</p>
+                    <div class="testi-footer">
+                        <div class="testi-avatar">D</div>
+                        <div class="testi-author-info">
+                            <h4>Deepak Nair</h4>
+                            <p class="testi-location">Kochi</p>
+                        </div>
+                        <span class="verified">&#10003; Verified</span>
+                    </div>
+                </div>
+
+                <!-- Review 7 -->
+                <div class="testi-card">
+                    <div class="quote-icon">"</div>
+                    <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+                    <span class="testi-product">Classic Bomber Jacket</span>
+                    <p class="testi-text">"The bomber jacket is really well made. Good quality zipper, comfortable inner lining, and fits true to size. Great for evenings out. 4 stars because delivery took a bit longer than expected, but the product itself is excellent."</p>
+                    <div class="testi-footer">
+                        <div class="testi-avatar">S</div>
+                        <div class="testi-author-info">
+                            <h4>Sahil Gupta</h4>
+                            <p class="testi-location">Jaipur</p>
+                        </div>
+                        <span class="verified">&#10003; Verified</span>
+                    </div>
+                </div>
+
+                <!-- Review 8 -->
+                <div class="testi-card">
+                    <div class="quote-icon">"</div>
+                    <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <span class="testi-product">Casual Linen Shirt</span>
+                    <p class="testi-text">"I was skeptical about buying clothes online, but RAVION completely changed my mind. The linen shirt is breathable, fits perfectly, and looks way more expensive than it is. Customer for life now."</p>
+                    <div class="testi-footer">
+                        <div class="testi-avatar">M</div>
+                        <div class="testi-author-info">
+                            <h4>Manish Reddy</h4>
+                            <p class="testi-location">Hyderabad</p>
+                        </div>
+                        <span class="verified">&#10003; Verified</span>
+                    </div>
+                </div>
+<!-- Review 9 -->
+                <div class="testi-card">
+                    <div class="quote-icon">"</div>
+                    <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <span class="testi-product">Urban Laptop Backpack</span>
+                    <p class="testi-text">"This backpack has everything I need. Laptop compartment fits my 15-inch perfectly, multiple pockets for organization, and the leather detailing makes it look premium. Using it daily for college and work."</p>
+                    <div class="testi-footer">
+                        <div class="testi-avatar">R</div>
+                        <div class="testi-author-info">
+                            <h4>Rohan Gill</h4>
+                            <p class="testi-location">Amritsar</p>
+                        </div>
+                        <span class="verified">&#10003; Verified</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+<!-- ==========================================
+    CUSTOMER PHOTOS SECTION
+    
+    Grid of product images representing 
+    customer submissions. Creates visual 
+    social proof. Hover shows name + rating.
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Customer Photos</h2>
+                <div class="gold-line"></div>
+                <p>Real looks from real customers</p>
+            </div>
+
+            <div class="customer-photos">
+
+                <div class="customer-photo">
+                    <img src="Images/product-polo.jpg" alt="Customer Photo">
+                    <div class="photo-overlay">
+                        <span class="photo-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                        <span class="photo-name">Rahul S.</span>
+                    </div>
+                </div>
+
+                <div class="customer-photo">
+                    <img src="Images/product-jacket.jpg" alt="Customer Photo">
+                    <div class="photo-overlay">
+                        <span class="photo-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                        <span class="photo-name">Vikram S.</span>
+                    </div>
+                </div>
+
+                <div class="customer-photo">
+                    <img src="Images/product-streetwear.jpg" alt="Customer Photo">
+                    <div class="photo-overlay">
+                        <span class="photo-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                        <span class="photo-name">Amit V.</span>
+                    </div>
+                </div>
+
+                <div class="customer-photo">
+                    <img src="Images/product-bag.jpg" alt="Customer Photo">
+                    <div class="photo-overlay">
+                        <span class="photo-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                        <span class="photo-name">Priya K.</span>
+                    </div>
+                </div>
+
+                <div class="customer-photo">
+                    <img src="Images/product-jeans.jpg" alt="Customer Photo">
+                    <div class="photo-overlay">
+                        <span class="photo-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+                        <span class="photo-name">Karan M.</span>
+                    </div>
+                </div>
+
+                <div class="customer-photo">
+                    <img src="Images/product-shirt.jpg" alt="Customer Photo">
+                    <div class="photo-overlay">
+                        <span class="photo-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                        <span class="photo-name">Manish R.</span>
+                    </div>
+                </div>
+</div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    WRITE REVIEW CTA
+    =========================================== -->
+
+    <section class="section section-dark">
+        <div class="container">
+
+            <div class="review-cta">
+                <h3>Share Your Experience</h3>
+                <div class="gold-line"></div>
+                <p>Your voice matters. Help other men discover RAVION by sharing your honest review. Every piece of feedback makes us better.</p>
+                <a href="feedback.html" class="btn btn-gold">Write a Review</a>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="Index.html" class="footer-logo">
+                        <img src="Images/Logo.png" alt="RAVION">
+                    </a>
+                    <p>Premium men's fashion brand offering high-quality essentials. Built for modern men who value style, comfort, and confidence.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="products.html">All Products</a></li>
+                        <li><a href="products.html">Polo Shirts</a></li>
+                        <li><a href="products.html">Jackets</a></li>
+                        <li><a href="products.html">Bags</a></li>
+                        <li><a href="products.html">Jeans</a></li>
+                        <li><a href="products.html">Office Wear</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Help</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="feedback.html">Give Feedback</a></li>
+                        <li><a href="pricing.html">Membership</a></li>
+                        <li><a href="testimonials.html">Reviews</a></li>
+                        <li><a href="profile.html">My Account</a></li>
+                    </ul>
+                           </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <span class="contact-icon">&#9993;</span>
+                            <span>info@ravion.in</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9742;</span>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9906;</span>
+                            <span>Chandigarh, India</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 RAVION. All Rights Reserved.</p>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

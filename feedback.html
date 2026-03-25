@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback & Reviews - RAVION</title>
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <!-- ==========================================
+    PAGE-SPECIFIC STYLES
+    
+    Feedback page has unique elements:
+    - Star rating selector (CSS only)
+    - Rating breakdown bar chart
+    - Review form with product selector
+    - Photo upload area (visual only)
+    - Helpful votes on reviews
+    - Overall rating display
+    =========================================== -->
+    <style>
+        /* Feedback layout: form + stats side by side */
+        .feedback-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 40px;
+        }
+
+        /* Overall rating display */
+        .rating-overview {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 35px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .big-rating {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--gold);
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .big-rating-stars {
+            color: var(--gold);
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            margin-bottom: 8px;
+        }
+
+        .total-reviews {
+            font-size: 0.78rem;
+            color: var(--gray);
+            letter-spacing: 1px;
+        }
+
+        /* Rating breakdown bars */
+        .rating-breakdown {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .rating-breakdown h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breakdown-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .breakdown-label {
+            font-size: 0.75rem;
+            color: var(--light-gray);
+            min-width: 45px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .breakdown-label .star {
+            color: var(--gold);
+            font-size: 0.7rem;
+        }
+
+        .breakdown-bar {
+            flex: 1;
+            height: 8px;
+            background: var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .breakdown-fill {
+            height: 100%;
+            background: var(--gold);
+            transition: width 0.5s ease;
+        }
+
+        .breakdown-count {
+            font-size: 0.7rem;
+            color: var(--gray);
+            min-width: 30px;
+            text-align: right;
+        }
+
+        /* Star rating selector (CSS only trick) */
+        .star-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .star-selector input[type="radio"] {
+            display: none;
+        }
+
+        .star-selector label {
+            font-size: 2rem;
+            color: var(--border);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .star-selector label:hover,
+        .star-selector label:hover ~ label {
+            color: var(--gold);
+        }
+
+        .star-selector input:checked ~ label {
+            color: var(--border);
+        }
+
+        .star-selector input:checked + label,
+        .star-selector label.selected {
+            color: var(--gold);
+        }
+
+        /* Since CSS-only star rating is complex,
+        we use pre-selected visual stars */
+        .visual-stars {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+
+        .visual-stars span {
+            font-size: 1.8rem;
+            color: var(--border);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .visual-stars span.active {
+            color: var(--gold);
+        }
+
+        .visual-stars span:hover {
+            color: var(--gold);
+        }
+
+        .rating-text {
+            font-size: 0.75rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+        }
+
+        /* Photo upload area */
+        .upload-area {
+            border: 2px dashed var(--border);
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            border-color: var(--gold);
+        }
+
+        .upload-area .upload-icon {
+            font-size: 2rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+
+        .upload-area p {
+            font-size: 0.78rem;
+            color: var(--gray);
+            margin: 0 auto;
+            max-width: none;
+        }
+
+        .upload-area .upload-hint {
+            font-size: 0.65rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        /* Product selector for review */
+        .product-select-grid {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .product-select-item {
+            width: 70px;
+            height: 85px;
+            border: 2px solid var(--border);
+            overflow: hidden;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: border-color 0.3s ease;
+        }
+
+        .product-select-item.selected {
+            border-color: var(--gold);
+        }
+
+        .product-select-item:hover {
+            border-color: var(--gold);
+        }
+
+        .product-select-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Review card enhancements */
+        .review-card .review-product {
+            font-size: 0.68rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 5px;
+        }
+
+        .review-card .helpful-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .helpful-section span {
+            font-size: 0.68rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .helpful-btn {
+            padding: 5px 12px;
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--gray);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .helpful-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* Verified purchase badge */
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.62rem;
+            color: var(--green);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-left: 10px;
+        }
+
+        /* Review images */
+        .review-images {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .review-images img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .review-images img:hover {
+            border-color: var(--gold);
+        }
+
+        /* Guidelines box */
+        .guidelines-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 25px;
+        }
+
+        .guidelines-box h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+            color: var(--gold);
+        }
+
+        .guidelines-box ul {
+            list-style: none;
+        }
+
+        .guidelines-box ul li {
+            font-size: 0.75rem;
+            color: var(--gray);
+            padding: 6px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.5;
+        }
+
+        .guidelines-box ul li .g-icon {
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .feedback-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .big-rating {
+                font-size: 3rem;
+            }
+
+            .visual-stars span {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .breakdown-row {
+                gap: 8px;
+            }
+
+            .breakdown-label {
+                min-width: 35px;
+                font-size: 0.68rem;
+            }
+
+            .product-select-item {
+                width: 55px;
+                height: 70px;
+            }
+
+            .review-images img {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <input type="checkbox" id="menu-checkbox">
+    <nav class="navbar">
+        <div class="container">
+            <a href="Index.html" class="logo">
+                <img src="Images/Logo.png" alt="RAVION">
+            </a>
+            <ul class="nav-links">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="pricing.html">Membership</a></li>
+                <li><a href="team.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="search.html">&#x1F50D;</a>
+                <a href="wishlist.html">&#x2661;</a>
+                <a href="cart.html">&#x1F6D2;</a>
+                <a href="login.html">&#x263A;</a>
+                <label for="menu-checkbox" class="menu-toggle">&#9776;</label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="Index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="pricing.html">Membership</a>
+        <a href="team.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="testimonials.html">Reviews</a>
+        <a href="search.html">Search</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Feedback &amp; Reviews</h1>
+            <p>Share your experience with RAVION</p>
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    FEEDBACK CONTENT
+    
+    TWO COLUMN LAYOUT:
+    Left: Review form (star rating + text + upload)
+    Right: Rating overview + breakdown + guidelines
+    
+    Below: Recent customer reviews
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="feedback-layout">
+
+                <!-- ============================
+                LEFT: REVIEW FORM
+                
+                Contains:
+                1. Product selector (thumbnails)
+                2. Star rating visual
+                3. Review title
+                4. Review text
+                5. Photo upload area
+                6. Name + Email
+                7. Submit button
+                ============================ -->
+                <div class="form-card" style="max-width: 100%;">
+
+                    <h2 style="text-align: left; font-size: 1.3rem; letter-spacing: 2px;">Write a Review</h2>
+                    <div class="gold-line" style="margin: 15px 0 25px 0;"></div>
+
+                    <form action="feedback.html" method="get">
+
+                        <!-- Product Selector -->
+                        <div class="form-group">
+                            <label>Select Product You Purchased</label>
+                            <div class="product-select-grid">
+                                <div class="product-select-item selected">
+                                    <img src="Images/product-polo.jpg" alt="Polo">
+                                </div>
+                                <div class="product-select-item">
+                                    <img src="Images/product-jacket.jpg" alt="Jacket">
+                                </div>
+                                <div class="product-select-item">
+                                    <img src="Images/product-tshirt.jpg" alt="T-Shirt">
+                                </div>
+                                <div class="product-select-item">
+                                    <img src="Images/product-bag.jpg" alt="Bag">
+                                </div>
+                                <div class="product-select-item">
+                                    <img src="Images/product-jeans.jpg" alt="Jeans">
+                                </div>
+                                <div class="product-select-item">
+                                    <img src="Images/product-streetwear.jpg" alt="Streetwear">
+                                </div>
+                                <div class="product-select-item">
+                                    <img src="Images/product-office.jpg" alt="Office">
+                                </div>
+                                <div class="product-select-item">
+                                    <img src="Images/product-shirt.jpg" alt="Shirt">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Star Rating -->
+                        <div class="form-group">
+                            <label>Your Rating</label>
+                            <div class="visual-stars">
+                                <span class="active">&#9733;</span>
+                                <span class="active">&#9733;</span>
+                                <span class="active">&#9733;</span>
+                                <span class="active">&#9733;</span>
+                                <span>&#9733;</span>
+                            </div>
+                            <p class="rating-text">4 Stars — Great</p>
+                        </div>
+
+                        <!-- Review Title -->
+                        <div class="form-group">
+                            <label for="review-title">Review Title</label>
+                            <input 
+                                type="text" 
+                                id="review-title" 
+                                name="title"
+                                placeholder="Sum up your experience in a line" 
+                                required>
+                        </div>
+
+                        <!-- Review Body -->
+                        <div class="form-group">
+                            <label for="review-body">Your Detailed Review</label>
+                            <textarea 
+                                id="review-body" 
+                                name="review"
+                                placeholder="What did you like or dislike? How was the fit, fabric, and quality? Would you recommend this to others?"
+                                style="height: 150px;"
+                                required></textarea>
+                        </div>
+
+                        <!-- Photo Upload -->
+                        <div class="form-group">
+                            <label>Add Photos (Optional)</label>
+                            <div class="upload-area">
+                                <div class="upload-icon">&#x1F4F7;</div>
+                                <p>Drag photos here or click to upload</p>
+                                <p class="upload-hint">JPG, PNG up to 5MB each. Max 4 photos.</p>
+                            </div>
+                        </div>
+
+                        <!-- Name + Email -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="review-name">Your Name</label>
+                                <input 
+                                    type="text" 
+                                    id="review-name" 
+                                    name="name"
+                                    placeholder="Display name" 
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="review-email">Email (Private)</label>
+                                <input 
+                                    type="email" 
+                                    id="review-email" 
+                                    name="email"
+                                    placeholder="your@email.com" 
+                                    required>
+                            </div>
+                        </div>
+
+                        <!-- Recommend Checkbox -->
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 25px;">
+                            <input type="checkbox" id="recommend" name="recommend" checked style="accent-color: var(--gold); width: 16px; height: 16px;">
+                            <label for="recommend" style="font-size: 0.8rem; color: var(--light-gray); cursor: pointer;">
+                                I would recommend RAVION to a friend
+                            </label>
+                        </div>
+
+                        <!-- Submit -->
+                        <button type="submit" class="btn btn-gold btn-full">
+                            Submit Review
+                        </button>
+
+                    </form>
+                </div>
+
+
+                <!-- ============================
+                RIGHT: RATING STATS + GUIDELINES
+                
+                Contains:
+                1. Overall rating big number
+                2. Rating breakdown bars
+                3. Review guidelines
+                ============================ -->
+                <div>
+
+                    <!-- Overall Rating -->
+                    <div class="rating-overview">
+                        <div class="big-rating">4.7</div>
+                        <div class="big-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+                        <p class="total-reviews">Based on 284 reviews</p>
+                    </div>
+
+                    <!-- Rating Breakdown -->
+                    <div class="rating-breakdown">
+                        <h4>Rating Breakdown</h4>
+
+                        <!-- 5 Stars -->
+                        <div class="breakdown-row">
+                            <span class="breakdown-label">5 <span class="star">&#9733;</span></span>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width: 68%;"></div>
+                            </div>
+                            <span class="breakdown-count">193</span>
+                        </div>
+
+                        <!-- 4 Stars -->
+                        <div class="breakdown-row">
+                            <span class="breakdown-label">4 <span class="star">&#9733;</span></span>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width: 20%;"></div>
+                            </div>
+                            <span class="breakdown-count">57</span>
+                        </div>
+                        <!-- 3 Stars -->
+                        <div class="breakdown-row">
+                            <span class="breakdown-label">3 <span class="star">&#9733;</span></span>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width: 7%;"></div>
+                            </div>
+                            <span class="breakdown-count">20</span>
+                        </div>
+
+                        <!-- 2 Stars -->
+                        <div class="breakdown-row">
+                          <span class="breakdown-label">2 <span class="star">&#9733;</span></span>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width: 3%;"></div>
+                            </div>
+                            <span class="breakdown-count">9</span>
+                        </div>
+<!-- 1 Star -->
+                        <div class="breakdown-row">
+                            <span class="breakdown-label">1 <span class="star">&#9733;</span></span>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width: 2%;"></div>
+                            </div>
+                            <span class="breakdown-count">5</span>
+                        </div>
+                    </div>
+
+                    <!-- Review Guidelines -->
+                    <div class="guidelines-box">
+                        <h4>Review Guidelines</h4>
+                        <ul>
+                            <li>
+                                <span class="g-icon">&#10003;</span>
+                                Focus on the product's quality, fit, and fabric
+                            </li>
+                            <li>
+                              <span class="g-icon">&#10003;</span>
+                                Share your honest experience — both pros and cons
+                            </li>
+                            <li>
+                                <span class="g-icon">&#10003;</span>
+                                Add photos to help other buyers decide
+                            </li>
+                            <li>
+                                <span class="g-icon">&#10003;</span>
+                                Mention the size you ordered and if it fits true to size
+                            </li>
+                            <li>
+                                <span class="g-icon">&#10003;</span>
+                                Keep the review respectful and relevant
+                            </li>
+                            <li>
+                                <span class="g-icon">&#10003;</span>
+                                Reviews with photos are featured first
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    RECENT REVIEWS SECTION
+    
+    Shows recent customer reviews below the form.
+    Each review has:
+    - Reviewer name + verified badge
+    - Star rating
+    - Product name
+    - Review text
+    - Review images (some)
+    - Helpful votes
+    - Date
+    =========================================== -->
+
+    <section class="section section-dark">
+        <div class="container">
+<div class="section-title">
+                <h2>Recent Reviews</h2>
+                <div class="gold-line"></div>
+                <p>See what others are saying</p>
+            </div>
+
+            <div class="review-grid">
+
+                <!-- Review 1 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="reviewer-name">
+                            Rahul Sharma
+                            <span class="verified-badge">&#10003; Verified Purchase</span>
+                        </span>
+                        <span class="review-date">12 Jan 2026</span>
+                    </div>
+                    <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="review-product">Classic Pique Polo</p>
+                    <p class="review-text">Absolutely love this polo! The fabric is incredibly soft and the fit is perfect. I'm 5'10" and Medium fits like it was custom made. The pique texture gives it a premium look. Already ordered two more colors.</p>
+                    <div class="review-images">
+                        <img src="Images/product-polo.jpg" alt="Review Photo">
+                    </div>
+                    <div class="helpful-section">
+                        <span>Was this helpful?</span>
+                        <button class="helpful-btn">Yes (24)</button>
+                        <button class="helpful-btn">No (1)</button>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="reviewer-name">
+                            Vikram Singh
+                            <span class="verified-badge">&#10003; Verified Purchase</span>
+                        </span>
+                        <span class="review-date">22 Jan 2026</span>
+                    </div>
+                    <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="review-product">Urban Leather Jacket</p>
+                    <p class="review-text">The leather quality exceeded my expectations at this price point. Stitching is impeccable, zippers are smooth, and the inner lining is comfortable. This jacket turns heads everywhere I go. Worth every rupee!</p>
+                    <div class="review-images">
+                        <img src="Images/product-jacket.jpg" alt="Review Photo">
+                    </div>
+                    <div class="helpful-section">
+                        <span>Was this helpful?</span>
+                        <button class="helpful-btn">Yes (31)</button>
+                        <button class="helpful-btn">No (0)</button>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="reviewer-name">
+                            Arjun Patel
+                            <span class="verified-badge">&#10003; Verified Purchase</span>
+                        </span>
+                        <span class="review-date">05 Feb 2026</span>
+                    </div>
+                    <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+                    <p class="review-product">Oxford Formal Shirt</p>
+                    <p class="review-text">Great shirt for office wear. The fabric is breathable and doesn't wrinkle easily. Only reason for 4 stars instead of 5 is I wish there were more color options. The white and light blue are excellent though.</p>
+                    <div class="helpful-section">
+                        <span>Was this helpful?</span>
+                        <button class="helpful-btn">Yes (18)</button>
+                        <button class="helpful-btn">No (2)</button>
+                    </div>
+                </div>
+                <!-- Review 4 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="reviewer-name">
+                            Priya Kaur
+                            <span class="verified-badge">&#10003; Verified Purchase</span>
+                        </span>
+                        <span class="review-date">08 Feb 2026</span>
+                    </div>
+                    <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="review-product">Executive Leather Bag</p>
+                    <p class="review-text">Bought this as a gift for my husband and he absolutely loves it! The leather smells amazing and the compartments are well designed. Fits his laptop perfectly. The RAVION packaging was also very premium. Highly recommend!</p>
+                    <div class="review-images">
+                        <img src="Images/product-bag.jpg" alt="Review Photo">
+                    </div>
+                    <div class="helpful-section">
+                        <span>Was this helpful?</span>
+                        <button class="helpful-btn">Yes (42)</button>
+                        <button class="helpful-btn">No (0)</button>
+                    </div>
+                </div>
+
+                <!-- Review 5 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="reviewer-name">
+                            Karan Mehta
+                            <span class="verified-badge">&#10003; Verified Purchase</span>
+                        </span>
+                        <span class="review-date">10 Feb 2026</span>
+                    </div>
+                    <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+                    <p class="review-product">Slim Fit Dark Jeans</p>
+                    <p class="review-text">Really good quality denim. The dark wash looks great and hasn't faded after multiple washes. Slim fit is accurate — not too tight, not too loose. The stretch is comfortable for daily wear. Would buy again.</p>
+                    <div class="helpful-section">
+                        <span>Was this helpful?</span>
+                        <button class="helpful-btn">Yes (15)</button>
+                        <button class="helpful-btn">No (1)</button>
+                    </div>
+                </div>
+
+                <!-- Review 6 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="reviewer-name">
+                            Amit Verma
+                            <span class="verified-badge">&#10003; Verified Purchase</span>
+                        </span>
+                        <span class="review-date">14 Feb 2026</span>
+                    </div>
+                    <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="review-product">Oversized Street Hoodie</p>
+                    <p class="review-text">This hoodie is FIRE! The oversized fit is exactly what I wanted. Material is thick and warm, perfect for winter. The gold RAVION branding detail is subtle but classy. Already my most worn piece. 10/10 would recommend.</p>
+                    <div class="review-images">
+                        <img src="Images/product-streetwear.jpg" alt="Review Photo">
+                    </div>
+                    <div class="helpful-section">
+                        <span>Was this helpful?</span>
+                        <button class="helpful-btn">Yes (37)</button>
+                        <button class="helpful-btn">No (0)</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Load More Reviews -->
+            <div class="text-center mt-40">
+                <a href="testimonials.html" class="btn btn-outline">View All Reviews</a>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="Index.html" class="footer-logo">
+                        <img src="Images/Logo.png" alt="RAVION">
+                    </a>
+                    <p>Premium men's fashion brand offering high-quality essentials. Built for modern men who value style, comfort, and confidence.</p>
+                </div></div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="products.html">All Products</a></li>
+                        <li><a href="products.html">Polo Shirts</a></li>
+                        <li><a href="products.html">Jackets</a></li>
+                        <li><a href="products.html">Bags</a></li>
+                        <li><a href="products.html">Jeans</a></li>
+                        <li><a href="products.html">Office Wear</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Help</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="feedback.html">Give Feedback</a></li>
+                        <li><a href="pricing.html">Membership</a></li>
+                        <li><a href="testimonials.html">Reviews</a></li>
+                        <li><a href="profile.html">My Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <span class="contact-icon">&#9993;</span>
+                            <span>info@ravion.in</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9742;</span>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9906;</span>
+                            <span>Chandigarh, India</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 RAVION. All Rights Reserved.</p>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

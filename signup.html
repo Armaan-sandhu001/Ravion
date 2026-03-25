@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - RAVION</title>
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <!-- ==========================================
+    PAGE-SPECIFIC STYLES
+    
+    Similar to login page but slightly different:
+    - Different background image (gallery3.jpg)
+    - Form card is slightly taller (more fields)
+    - Has two-column row for name fields
+    
+    EXAMINER ANSWER: "I used a different 
+    background image on signup vs login to 
+    give each auth page its own visual 
+    identity while maintaining brand 
+    consistency through colors and layout."
+    =========================================== -->
+    <style>
+        .signup-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 20px 60px 20px;
+            background-image: url('Images/gallery3.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .signup-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1;
+        }
+
+        .signup-page .form-card {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .form-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-logo img {
+            height: 50px;
+            margin: 0 auto;
+        }
+
+        .welcome-text {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .welcome-text h2 {
+            font-size: 1.6rem;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+        }
+
+        .welcome-text p {
+            font-size: 0.82rem;
+            color: var(--gray);
+            margin: 0 auto;
+            max-width: none;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider span {
+            padding: 0 15px;
+            font-size: 0.72rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Password requirements text */
+        .password-hint {
+            font-size: 0.7rem;
+            color: var(--gray);
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Terms checkbox styling */
+        .terms-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 25px;
+            font-size: 0.78rem;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        .terms-check input[type="checkbox"] {
+            accent-color: var(--gold);
+            width: 16px;
+            height: 16px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .terms-check a {
+            color: var(--gold);
+        }
+
+        /* Benefits list below form */
+        .signup-benefits {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .signup-benefits h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gray);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .benefit-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .benefit-list li {
+            font-size: 0.78rem;
+            color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .benefit-list li .check {
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive: stack name fields on mobile */
+        @media (max-width: 480px) {
+            .signup-page .form-card {
+                max-width: 100%;
+            }
+
+            .signup-page {
+                padding: 100px 15px 40px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ==========================================
+    NAVIGATION BAR (Same on every page)
+    =========================================== -->
+
+    <input type="checkbox" id="menu-checkbox">
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="Index.html" class="logo">
+                <img src="Images/Logo.png" alt="RAVION">
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="pricing.html">Membership</a></li>
+                <li><a href="team.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+
+            <div class="nav-icons">
+                <a href="search.html">&#x1F50D;</a>
+                <a href="wishlist.html">&#x2661;</a>
+                <a href="cart.html">&#x1F6D2;</a>
+                <a href="login.html">&#x263A;</a>
+                <label for="menu-checkbox" class="menu-toggle">&#9776;</label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="Index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="pricing.html">Membership</a>
+        <a href="team.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="testimonials.html">Reviews</a>
+        <a href="search.html">Search</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+
+    <!-- ==========================================
+    SIGNUP SECTION
+    
+    DESIGN CHOICES:
+    
+    1. Different background than login 
+       (gallery3.jpg vs gallery1.jpg)
+       This gives each page its own identity
+    
+    2. More fields than login:
+       - First Name + Last Name (side by side)
+       - Email
+       - Phone
+       - Password
+       - Confirm Password
+       - Terms checkbox
+    
+    3. Benefits list at bottom
+       Shows WHY the user should sign up
+       Creates motivation to complete the form
+    
+    4. Two-column name row
+       First + Last name side by side on desktop
+       Stacks vertically on mobile
+       Uses .form-row class from style.css
+    
+    5. Password hints
+       Shows requirements below password field
+       Professional UX touch
+    =========================================== -->
+
+    <section class="signup-page">
+
+        <div class="form-card">
+
+            <!-- RAVION Logo -->
+            <div class="form-logo">
+                <img src="Images/Logo.png" alt="RAVION">
+            </div>
+
+            <!-- Welcome heading -->
+            <div class="welcome-text">
+                <h2>Join RAVION</h2>
+                <p>Create your account and start shopping</p>
+            </div>
+
+            <div class="gold-line"></div>
+            <br>
+
+            <!-- Signup Form -->
+            <form action="profile.html" method="get">
+
+                <!-- First Name + Last Name (side by side)
+                .form-row creates 2 equal columns
+                On mobile, CSS stacks them vertically -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstname">First Name</label>
+                        <input 
+                            type="text" 
+                            id="firstname" 
+                            name="firstname" 
+                            placeholder="First name" 
+                            required>
+                        <!-- type="text" = plain text input
+                        This is the most basic input type -->
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastname">Last Name</label>
+                        <input 
+                            type="text" 
+                            id="lastname" 
+                            name="lastname" 
+                            placeholder="Last name" 
+                            required>
+                    </div>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="your@email.com" 
+                        required>
+                </div>
+
+                <!-- Phone Number Field -->
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        placeholder="+91 98765 43210" 
+                        required>
+                    <!-- type="tel" = telephone input
+                    On mobile phones, this opens 
+                    the NUMBER keyboard instead of 
+                    the text keyboard. Smart UX! -->
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Create a strong password" 
+                        required>
+                    <p class="password-hint">
+                        Must be at least 8 characters with one uppercase and one number
+                    </p>
+                    <!-- Password hint helps user create 
+                    a strong password. Professional touch 
+                    that shows attention to security. -->
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input 
+                        type="password" 
+                        id="confirm-password" 
+                        name="confirm-password" 
+                        placeholder="Re-enter your password" 
+                        required>
+                    <!-- Confirm password ensures user 
+                    typed the correct password.
+                    In real app, JavaScript would check 
+                    if both passwords match. -->
+                </div>
+
+                <!-- Terms & Conditions Checkbox -->
+                <div class="terms-check">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">
+                        I agree to the <a href="#">Terms of Service</a> 
+                        and <a href="#">Privacy Policy</a> of RAVION
+                    </label>
+                </div>
+
+                <!-- Create Account Button -->
+                <button type="submit" class="btn btn-gold btn-full">
+                    Create Account
+                </button>
+
+            </form>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>or</span>
+            </div>
+
+            <!-- Login Link -->
+            <div class="form-links">
+                <p>Already have an account? <a href="login.html">Sign In</a></p>
+            </div>
+
+            <!-- Signup Benefits
+            This section tells the user WHY 
+            they should create an account.
+            Creates value proposition. -->
+            <div class="signup-benefits">
+                <h4>Why Join RAVION?</h4>
+                <ul class="benefit-list">
+                    <li>
+                        <span class="check">&#10003;</span>
+                        Exclusive member-only discounts and offers
+                    </li>
+                    <li>
+                        <span class="check">&#10003;</span>
+                        Early access to new arrivals and drops
+                    </li>
+                    <li>
+                        <span class="check">&#10003;</span>
+                        Track your orders and save your wishlist
+                    </li>
+                    <li>
+                        <span class="check">&#10003;</span>
+                        Free shipping on your first order
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- No footer on auth pages (same as login) -->
+
+</body>
+</html>

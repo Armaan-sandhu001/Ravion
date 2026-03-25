@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - RAVION</title>
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <!-- ==========================================
+    PAGE-SPECIFIC STYLES
+    
+    Checkout has unique elements:
+    - Step progress indicator (Step 1, 2, 3)
+    - Order item mini cards
+    - Payment method cards
+    - Secure checkout assurance section
+    - Order confirmation style
+    =========================================== -->
+    <style>
+        /* Checkout progress steps */
+        .checkout-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 50px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gray);
+            transition: all 0.3s ease;
+        }
+
+        .step-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        /* Active step = gold */
+        .step.active .step-number {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(200, 164, 90, 0.1);
+        }
+
+        .step.active .step-label {
+            color: var(--gold);
+        }
+
+        /* Completed step = filled gold */
+        .step.completed .step-number {
+            border-color: var(--gold);
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        .step.completed .step-label {
+            color: var(--light-gray);
+        }
+
+        /* Line between steps */
+        .step-line {
+            width: 60px;
+            height: 2px;
+            background: var(--border);
+            margin: 0 15px;
+        }
+
+        .step-line.completed {
+            background: var(--gold);
+        }
+
+        /* Order items in summary */
+        .order-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+          .order-item:last-child {  
+        border-bottom: none;  
+    }  
+
+    .order-item img {  
+        width: 55px;  
+        height: 65px;  
+        object-fit: cover;  
+    }  
+
+    .order-item-details {  
+        flex: 1;  
+    }  
+
+    .order-item-details h4 {  
+        font-family: 'Montserrat', sans-serif;  
+        font-size: 0.78rem;  
+        font-weight: 500;  
+        letter-spacing: 0.5px;  
+        margin-bottom: 3px;  
+    }  
+
+    .order-item-details .item-qty {  
+        font-size: 0.68rem;  
+        color: var(--gray);  
+    }  
+
+    .order-item-price {  
+        font-size: 0.85rem;  
+        font-weight: 600;  
+        color: var(--white);  
+    }  
+
+    /* Payment method cards */  
+    .payment-card {  
+        display: flex;  
+        align-items: center;  
+        gap: 15px;  
+        padding: 16px;  
+        border: 1px solid var(--border);  
+        margin-bottom: 10px;  
+        cursor: pointer;  
+        transition: all 0.3s ease;  
+        background: var(--dark);  
+    }  
+
+    .payment-card:hover {  
+        border-color: var(--gold);  
+    }  
+
+    .payment-card.selected {  
+        border-color: var(--gold);  
+        background: rgba(200, 164, 90, 0.05);  
+    }  
+
+    .payment-card input[type="radio"] {  
+        accent-color: var(--gold);  
+        width: 16px;  
+        height: 16px;  
+    }  
+
+    .payment-card .payment-icon {  
+        font-size: 1.3rem;  
+        color: var(--gold);  
+        width: 30px;  
+        text-align: center;  
+    }  
+
+    .payment-card .payment-details {  
+        flex: 1;  
+    }  
+
+    .payment-card .payment-name {  
+        font-size: 0.85rem;  
+        font-weight: 500;  
+        color: var(--white);  
+        margin-bottom: 2px;  
+    }  
+
+    .payment-card .payment-desc {  
+        font-size: 0.7rem;  
+        color: var(--gray);  
+    }  
+
+    /* Delivery estimate */  
+    .delivery-estimate {  
+        background: rgba(200, 164, 90, 0.05);  
+        border-left: 3px solid var(--gold);  
+        padding: 15px 18px;  
+        margin-top: 20px;  
+    }  
+
+    .delivery-estimate p {  
+        font-size: 0.78rem;  
+        color: var(--light-gray);  
+        margin: 0;  
+        max-width: none;  
+    }  
+
+    .delivery-estimate .estimate-date {  
+        color: var(--gold);  
+        font-weight: 600;  
+    }  
+
+    /* Trust badges at bottom of summary */  
+    .trust-row {  
+        display: flex;  
+        justify-content: space-around;  
+        padding-top: 18px;  
+        margin-top: 18px;  
+        border-top: 1px solid var(--border);  
+    }  
+
+    .trust-item {  
+        text-align: center;  
+        font-size: 0.62rem;  
+        color: var(--gray);  
+        text-transform: uppercase;  
+        letter-spacing: 1px;  
+    }  
+
+    .trust-item .trust-icon {  
+        font-size: 1.1rem;  
+        color: var(--gold);  
+        display: block;  
+        margin-bottom: 4px;  
+    }  
+
+    /* Gift message textarea */  
+    .gift-section {  
+        margin-top: 15px;  
+    }  
+
+    .gift-toggle {  
+        display: flex;  
+        align-items: center;  
+        gap: 8px;  
+        font-size: 0.8rem;  
+        color: var(--gray);  
+        cursor: pointer;  
+        margin-bottom: 10px;  
+    }  
+
+    .gift-toggle input[type="checkbox"] {  
+        accent-color: var(--gold);  
+        width: 15px;  
+        height: 15px;  
+    }  
+
+    /* Edit cart link */  
+    .edit-cart-link {  
+        display: block;  
+        text-align: center;  
+        font-size: 0.72rem;  
+        color: var(--gray);  
+        text-transform: uppercase;  
+        letter-spacing: 1.5px;  
+        margin-top: 15px;  
+        transition: color 0.3s ease;  
+    }  
+
+    .edit-cart-link:hover {  
+        color: var(--gold);  
+    }  
+
+    @media (max-width: 768px) {  
+        .checkout-steps {  
+            flex-wrap: wrap;  
+            gap: 10px;  
+            justify-content: center;  
+        }  
+
+        .step-line {  
+            width: 30px;  
+            margin: 0 8px;  
+        }  
+
+        .step-label {  
+            font-size: 0.65rem;  
+        }  
+    }  
+
+    @media (max-width: 480px) {  
+        .checkout-steps {  
+            flex-direction: column;  
+            align-items: flex-start;  
+            gap: 15px;  
+            padding-left: 20px;  
+        }  
+
+        .step-line {  
+            display: none;  
+        }  
+
+        .payment-card {  
+            padding: 12px;  
+        }  
+
+        .trust-row {  
+            flex-wrap: wrap;  
+            gap: 15px;  
+        }  
+
+        .order-item img {  
+            width: 45px;  
+            height: 55px;  
+        }  
+    }  
+</style>
+</head>  <body>  <!-- NAVBAR -->  
+<input type="checkbox" id="menu-checkbox">  
+<nav class="navbar">  
+    <div class="container">  
+        <a href="Index.html" class="logo">  
+            <img src="Images/Logo.png" alt="RAVION">  
+        </a>  
+        <ul class="nav-links">  
+            <li><a href="Index.html">Home</a></li>  
+            <li><a href="products.html">Shop</a></li>  
+            <li><a href="gallery.html">Gallery</a></li>  
+            <li><a href="pricing.html">Membership</a></li>  
+            <li><a href="team.html">About</a></li>  
+            <li><a href="contact.html">Contact</a></li>  
+        </ul>  
+        <div class="nav-icons">  
+            <a href="search.html">&#x1F50D;</a>  
+            <a href="wishlist.html">&#x2661;</a>  
+            <a href="cart.html">&#x1F6D2;</a>  
+            <a href="login.html">&#x263A;</a>  
+            <label for="menu-checkbox" class="menu-toggle">&#9776;</label>  
+        </div>  
+    </div>  
+</nav>  
+
+<div class="mobile-menu">  
+    <a href="Index.html">Home</a>  
+    <a href="products.html">Shop</a>  
+    <a href="gallery.html">Gallery</a>  
+    <a href="pricing.html">Membership</a>  
+    <a href="team.html">About</a>  
+    <a href="contact.html">Contact</a>  
+    <a href="testimonials.html">Reviews</a>  
+    <a href="search.html">Search</a>  
+    <a href="wishlist.html">Wishlist</a>  
+    <a href="cart.html">Cart</a>  
+    <a href="login.html">Login</a>  
+    <a href="signup.html">Sign Up</a>  
+</div>  
+
+
+<!-- PAGE HEADER -->  
+<section class="page-header">  
+    <div class="container">  
+        <h1>Checkout</h1>  
+        <p>Complete your order</p>  
+    </div>  
+</section>  
+
+
+<!-- ==========================================  
+CHECKOUT CONTENT  
+  
+LAYOUT:  
+- Checkout steps progress (top)  
+- Left column: Shipping form + Payment  
+- Right column: Order summary (sticky)  
+  
+DESIGN:  
+- Step indicator shows checkout progress  
+- Clean form sections with clear headings  
+- Payment method cards with radio buttons  
+- Order summary with item thumbnails  
+- Trust badges for security assurance  
+=========================================== -->  
+
+<section class="section">  
+    <div class="container">  
+
+        <!-- ============================  
+        CHECKOUT PROGRESS STEPS  
+          
+        Shows where user is in checkout:  
+        Step 1: Cart (completed ✓)  
+        Step 2: Shipping (active - current)  
+        Step 3: Payment (upcoming)  
+          
+        Completed = filled gold circle  
+        Active = gold outline circle  
+        Upcoming = gray outline circle  
+        ============================ -->  
+        <div class="checkout-steps">  
+            <div class="step completed">  
+                <span class="step-number">&#10003;</span>  
+                <span class="step-label">Cart</span>  
+            </div>  
+            <div class="step-line completed"></div>  
+            <div class="step active">  
+                <span class="step-number">2</span>  
+                <span class="step-label">Shipping</span>  
+            </div>  
+            <div class="step-line"></div>  
+            <div class="step">  
+                <span class="step-number">3</span>  
+                <span class="step-label">Payment</span>  
+            </div>  
+        </div>  
+
+
+        <!-- TWO COLUMN LAYOUT -->  
+        <div class="checkout-layout">  
+
+            <!-- ============================  
+            LEFT COLUMN: FORMS  
+            Contains:  
+            1. Contact info section  
+            2. Shipping address section  
+            3. Payment method section  
+            4. Gift message option  
+            ============================ -->  
+            <div class="checkout-forms">  
+
+                <!-- ========================  
+                SECTION 1: CONTACT INFO  
+                  
+                Email and phone for order   
+                updates and delivery OTP.  
+                ======================== -->  
+                <div class="checkout-section">  
+                    <h3>Contact Information</h3>  
+
+                    <form action="profile.html" method="get">  
+
+                        <div class="form-group">  
+                            <label for="checkout-email">Email Address</label>  
+                            <input   
+                                type="email"   
+                                id="checkout-email"   
+                                name="email"  
+                                placeholder="your@email.com"   
+                                required>  
+                        </div>  
+
+                        <div class="form-group">  
+                            <label for="checkout-phone">Phone Number</label>  
+                            <input   
+                                type="tel"   
+                                id="checkout-phone"   
+                                name="phone"  
+                                placeholder="+91 98765 43210"   
+                                required>  
+                        </div>  
+
+                </div>  
+
+
+                <!-- ========================  
+                SECTION 2: SHIPPING ADDRESS  
+                  
+                Full address form with:  
+                - First + Last name (side by side)  
+                - Street address  
+                - City + State (side by side)  
+                - PIN code + Country (side by side)  
+                  
+                .form-row = 2 column grid  
+                On mobile it stacks to 1 column  
+                ======================== -->  
+                <div class="checkout-section">  
+                    <h3>Shipping Address</h3>  
+
+                        <!-- Name row: 2 columns -->  
+                        <div class="form-row">  
+                            <div class="form-group">  
+                                <label for="ship-firstname">First Name</label>  
+                                <input   
+                                    type="text"   
+                                    id="ship-firstname"   
+                                    name="firstname"  
+                                    placeholder="First name"   
+                                    required>  
+                            </div>  
+                            <div class="form-group">  
+                                <label for="ship-lastname">Last Name</label>  
+                                <input   
+                                    type="text"   
+                                    id="ship-lastname"   
+                                    name="lastname"  
+                                    placeholder="Last name"   
+                                    required>  
+                            </div>  
+                        </div>  
+
+                        <!-- Street Address -->  
+                        <div class="form-group">  
+                            <label for="address">Street Address</label>  
+                            <input   
+                                type="text"   
+                                id="address"   
+                                name="address"  
+                                placeholder="House no., Building, Street, Area"   
+                                required>  
+                        </div>  
+
+                        <!-- Apartment/Suite (optional) -->  
+                        <div class="form-group">  
+                            <label for="address2">Apartment / Suite / Floor (Optional)</label>  
+                            <input   
+                                type="text"   
+                                id="address2"   
+                                name="address2"  
+                                placeholder="Apartment, suite, unit, floor">  
+                        </div>  
+
+                        <!-- City + State row -->  
+                        <div class="form-row">  
+                            <div class="form-group">  
+                                <label for="city">City</label>  
+                                <input   
+                                    type="text"   
+                                    id="city"   
+                                    name="city"  
+                                    placeholder="Chandigarh"   
+                                    required>  
+                            </div>  
+                            <div class="form-group">  
+                                <label for="state">State</label>  
+                                <select id="state" name="state" required>  
+                                    <option value="">Select State</option>  
+                                    <option value="punjab" selected>Punjab</option>  
+                                    <option value="haryana">Haryana</option>  
+                                    <option value="delhi">Delhi</option>  
+                                    <option value="maharashtra">Maharashtra</option>  
+                                    <option value="karnataka">Karnataka</option>  
+                                    <option value="tamil-nadu">Tamil Nadu</option>  
+                                    <option value="uttar-pradesh">Uttar Pradesh</option>  
+                                    <option value="rajasthan">Rajasthan</option>  
+                                    <option value="gujarat">Gujarat</option>  
+                                    <option value="west-bengal">West Bengal</option>  
+                                    <option value="other">Other</option>  
+                                </select>  
+                            </div>  
+                        </div>  
+
+                        <!-- PIN + Country row -->  
+                        <div class="form-row">  
+                            <div class="form-group">  
+                                <label for="pincode">PIN Code</label>  
+                                <input   
+                                    type="text"   
+                                    id="pincode"   
+                                    name="pincode"  
+                                    placeholder="160017"   
+                                    required>  
+                            </div>  
+                            <div class="form-group">  
+                                <label for="country">Country</label>  
+                                <input   
+                                    type="text"   
+                                    id="country"   
+                                    name="country"  
+                                    value="India"   
+                                    readonly   
+                                    style="color: var(--gray);">  
+                            </div>  
+                        </div>  
+
+                        <!-- Delivery Estimate -->  
+                        <div class="delivery-estimate">  
+                            <p>&#x27A4; Estimated Delivery: <span class="estimate-date">18 - 22 February 2026</span></p>  
+                            <p style="margin-top: 5px; font-size: 0.7rem; color: var(--gray);">Free shipping on orders above ₹999</p>  
+                        </div>  
+                </div>  
+
+
+                <!-- ========================  
+                SECTION 3: PAYMENT METHOD  
+                  
+                Radio button cards for:  
+                - Cash on Delivery  
+                - Credit/Debit Card  
+                - UPI (PhonePe, GPay etc)  
+                - Net Banking  
+                  
+                Each card has:  
+                - Radio button  
+                - Payment icon  
+                - Name + description  
+                ======================== -->  
+                <div class="checkout-section">  
+                    <h3>Payment Method</h3>  
+
+                        <!-- COD -->  
+                        <div class="payment-card selected">  
+                            <input type="radio" name="payment" id="cod" value="cod" checked>  
+                            <span class="payment-icon">&#x1F4B5;</span>  
+                            <div class="payment-details">  
+                                <p class="payment-name">Cash on Delivery</p>  
+                                <p class="payment-desc">Pay when your order arrives</p>  
+                            </div>  
+                        </div>  
+
+                        <!-- Card -->  
+                        <div class="payment-card">  
+                            <input type="radio" name="payment" id="card" value="card">  
+                            <span class="payment-icon">&#x1F4B3;</span>  
+                            <div class="payment-details">  
+                                <p class="payment-name">Credit / Debit Card</p>  
+                                <p class="payment-desc">Visa, Mastercard, Rupay accepted</p>  
+                            </div>  
+                        </div>  
+
+                        <!-- UPI -->  
+                        <div class="payment-card">  
+                            <input type="radio" name="payment" id="upi" value="upi">  
+                            <span class="payment-icon">&#x260E;</span>  
+                            <div class="payment-details">  
+                                <p class="payment-name">UPI Payment</p>  
+                                <p class="payment-desc">Google Pay, PhonePe, Paytm, BHIM</p>  
+                            </div>  
+                        </div>  
+
+                        <!-- Net Banking -->  
+                        <div class="payment-card">  
+                            <input type="radio" name="payment" id="netbanking" value="netbanking">  
+                            <span class="payment-icon">&#x1F3E6;</span>  
+                            <div class="payment-details">  
+                                <p class="payment-name">Net Banking</p>  
+                                <p class="payment-desc">All major Indian banks supported</p>  
+                            </div>  
+                        </div>  
+                </div>  
+
+
+                <!-- ========================  
+                SECTION 4: GIFT MESSAGE  
+                  
+                Optional gift wrapping and   
+                personal message.  
+                Premium touch that shows   
+                attention to detail.  
+                ======================== -->  
+                <div class="checkout-section">  
+                    <h3>Additional Options</h3>  
+
+                        <!-- Gift Wrap Toggle -->  
+                        <div class="gift-toggle">  
+                            <input type="checkbox" id="gift-wrap" name="gift-wrap">  
+                            <label for="gift-wrap">Send as a gift (Add premium gift wrapping for ₹49)</label>  
+                        </div>  
+
+                        <div class="form-group">  
+                            <label for="gift-msg">Gift Message (Optional)</label>  
+                            <textarea   
+                                id="gift-msg"   
+                                name="gift-message"  
+                                placeholder="Write a personal message for the recipient..."  
+                                style="height: 80px;"></textarea>  
+                        </div>  
+
+                        <div class="form-group">  
+                            <label for="order-notes">Order Notes (Optional)</label>  
+                            <textarea   
+                                id="order-notes"   
+                                name="order-notes"  
+                                placeholder="Any special instructions for delivery..."  
+                                style="height: 80px;"></textarea>  
+                        </div>  
+
+                        <!-- Place Order Button -->  
+                        <button type="submit" class="btn btn-gold btn-full" style="margin-top: 15px;">  
+                            Place Order — &#8377;3,178  
+                        </button>  
+
+                    </form>  
+
+                        <p style="text-align: center; font-size: 0.7rem; color: var(--gray); margin-top: 12px; max-width: none;">  
+                            By placing this order, you agree to RAVION's   
+                            <a href="#" style="font-size: 0.7rem;">Terms of Service</a> and   
+                            <a href="#" style="font-size: 0.7rem;">Privacy Policy</a>  
+                        </p>  
+                </div>  
+
+            </div>  
+
+
+            <!-- ============================  
+            RIGHT COLUMN: ORDER SUMMARY  
+              
+            Sticky sidebar showing:  
+            - Order items with thumbnails  
+            - Coupon applied  
+            - Price breakdown  
+            - Trust badges  
+            ============================ -->  
+            <div>  
+
+                <div class="cart-summary">  
+
+                    <h3>Order Summary</h3>  
+
+                    <!-- Order Items Mini Cards -->  
+                    <div class="order-item">  
+                        <img src="Images/product-polo.jpg" alt="Polo">  
+                        <div class="order-item-details">  
+                            <h4>Classic Pique Polo</h4>  
+                            <p class="item-qty">Size: M &bull; Qty: 1</p>  
+                        </div>  
+                        <span class="order-item-price">&#8377;799</span>  
+                    </div>  
+
+                    <div class="order-item">  
+                        <img src="Images/product-jacket.jpg" alt="Jacket">  
+                        <div class="order-item-details">  
+                            <h4>Urban Leather Jacket</h4>  
+                            <p class="item-qty">Size: L &bull; Qty: 1</p>  
+                        </div>  
+                        <span class="order-item-price">&#8377;2,499</span>  
+                    </div>  
+
+                    <div class="order-item">  
+                        <img src="Images/product-jeans.jpg" alt="Jeans">  
+                        <div class="order-item-details">  
+                            <h4>Slim Fit Dark Jeans</h4>  
+                            <p class="item-qty">Size: 32 &bull; Qty: 2</p>  
+                        </div>  
+                        <span class="order-item-price">&#8377;1,998</span>  
+                    </div>  
+
+                    <!-- Price Breakdown -->  
+                    <div style="margin-top: 15px;">  
+                        <div class="summary-row">  
+                            <span>Subtotal (4 items)</span>  
+                            <span>&#8377;5,296</span>  
+                        </div>  
+
+                        <div class="summary-row discount">  
+                            <span>Discount (40%)</span>  
+                            <span>- &#8377;2,118</span>  
+                        </div>  
+
+                        <div class="summary-row">  
+                                                 <span>Delivery</span>  
+                            <span>&#8377;99</span>  
+                        </div>  
+
+                        <div class="summary-row">  
+                            <span>VIP Savings</span>  
+                            <span style="color: var(--green);">- &#8377;99</span>  
+                        </div>  
+
+                        <div class="summary-row total">  
+                            <span>Total</span>  
+                            <span>&#8377;3,178</span>  
+                        </div>  
+                    </div>  
+
+                    <div style="font-size: 0.72rem; color: var(--green); text-align: center; margin-top: 10px;">  
+                        You're saving &#8377;2,217 on this order!  
+                    </div>  
+
+                    <!-- Edit Cart Link -->  
+                    <a href="cart.html" class="edit-cart-link">&larr; Edit Cart</a>  
+
+                    <!-- Trust Badges -->  
+                    <div class="trust-row">  
+                        <div class="trust-item">  
+                            <span class="trust-icon">&#128274;</span>  
+                            SSL Secure  
+                        </div>  
+                        <div class="trust-item">  
+                            <span class="trust-icon">&#x21BA;</span>  
+                            30-Day Returns  
+                        </div>  
+                        <div class="trust-item">  
+                            <span class="trust-icon">&#9733;</span>  
+                            Authentic  
+                        </div>  
+                    </div>  
+
+                </div>  
+
+            </div>  
+
+        </div>  
+
+    </div>  
+</section>  
+
+
+<!-- FOOTER -->  
+<footer class="footer">  
+    <div class="container">  
+        <div class="footer-grid">  
+            <div class="footer-brand">  
+                <a href="Index.html" class="footer-logo">  
+                    <img src="Images/Logo.png" alt="RAVION">  
+                </a>  
+                <p>Premium men's fashion brand offering high-quality essentials. Built for modern men who value style, comfort, and confidence.</p>  
+            </div>  
+            <div class="footer-col">  
+                <h4>Shop</h4>  
+                <ul>  
+                    <li><a href="products.html">All Products</a></li>  
+                    <li><a href="products.html">Polo Shirts</a></li>  
+                    <li><a href="products.html">Jackets</a></li>  
+                    <li><a href="products.html">Bags</a></li>  
+                    <li><a href="products.html">Jeans</a></li>  
+                    <li><a href="products.html">Office Wear</a></li>  
+                </ul>  
+            </div>  
+            <div class="footer-col">  
+                <h4>Help</h4>  
+                <ul>  
+                    <li><a href="contact.html">Contact Us</a></li>  
+                    <li><a href="feedback.html">Give Feedback</a></li>  
+                    <li><a href="pricing.html">Membership</a></li>  
+                    <li><a href="testimonials.html">Reviews</a></li>  
+                    <li><a href="profile.html">My Account</a></li>  
+                </ul>  
+            </div>  
+            <div class="footer-col">  
+                <h4>Contact</h4>  
+                <ul class="footer-contact">  
+                    <li>  
+                        <span class="contact-icon">&#9993;</span>  
+                        <span>info@ravion.in</span>  
+                    </li>  
+                    <li>  
+                        <span class="contact-icon">&#9742;</span>  
+                        <span>+91 98765 43210</span>  
+                    </li>  
+                    <li>  
+                        <span class="contact-icon">&#9906;</span>  
+                        <span>Chandigarh, India</span>  
+                    </li>  
+                </ul>  
+            </div>  
+        </div>  
+        <div class="footer-bottom">  
+            <p>&copy; 2026 RAVION. All Rights Reserved.</p>  
+            <div class="social-links">  
+                <a href="#">Instagram</a>  
+                <a href="#">Twitter</a>  
+                <a href="#">Facebook</a>  
+                <a href="#">YouTube</a>  
+            </div>  
+        </div>  
+    </div>  
+</footer>
+
+</body>  
+</html>  

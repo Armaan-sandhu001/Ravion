@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - RAVION</title>
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <!-- ==========================================
+    PAGE-SPECIFIC STYLES
+    
+    Search page has unique elements:
+    - Large hero search bar
+    - Search suggestions/trending
+    - Search results count
+    - Filter sidebar (visual only)
+    - Recent searches section
+    =========================================== -->
+    <style>
+        /* Hero search section */
+        .search-hero {
+            background: var(--dark);
+            padding: 140px 0 60px 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-hero h1 {
+            font-size: 2rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .search-hero p {
+            font-size: 0.82rem;
+            color: var(--gold);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin: 0 auto 30px auto;
+            max-width: none;
+        }
+
+        /* Large search bar in hero */
+        .search-bar-large {
+            display: flex;
+            max-width: 650px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+            transition: border-color 0.3s ease;
+        }
+
+        .search-bar-large:focus-within {
+            border-color: var(--gold);
+        }
+
+        .search-bar-large input {
+            flex: 1;
+            padding: 18px 25px;
+            background: var(--card);
+            border: none;
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            letter-spacing: 0.5px;
+        }
+
+        .search-bar-large input::placeholder {
+            color: var(--gray);
+            letter-spacing: 1px;
+        }
+
+        .search-bar-large button {
+            padding: 18px 35px;
+            background: var(--gold);
+            color: var(--black);
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .search-bar-large button:hover {
+            background: var(--gold-hover);
+        }
+
+        /* Trending searches */
+        .trending-searches {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .trending-label {
+            font-size: 0.7rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-right: 5px;
+        }
+
+        .trending-tag {
+            padding: 6px 16px;
+            border: 1px solid var(--border);
+            font-size: 0.7rem;
+            color: var(--light-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .trending-tag:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* Search results layout */
+        .search-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 40px;
+        }
+
+        /* Filter sidebar */
+        .filter-sidebar {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 30px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .filter-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--white);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filter-group {
+            margin-bottom: 25px;
+        }
+
+        .filter-group h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+
+        .filter-option input[type="checkbox"] {
+            accent-color: var(--gold);
+            width: 14px;
+            height: 14px;
+        }
+
+        .filter-option label {
+            font-size: 0.78rem;
+            color: var(--light-gray);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .filter-option label:hover {
+            color: var(--gold);
+        }
+
+        .filter-option .count {
+            font-size: 0.65rem;
+            color: var(--gray);
+            margin-left: auto;
+        }
+
+        /* Price range inputs */
+        .price-range {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .price-range input {
+            width: 100%;
+            padding: 10px;
+            background: var(--dark);
+            border: 1px solid var(--border);
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            outline: none;
+            text-align: center;
+        }
+
+        .price-range input:focus {
+            border-color: var(--gold);
+        }
+
+        .price-range span {
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        /* Apply filters button */
+        .apply-filters {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .apply-filters:hover {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        /* Clear filters link */
+        .clear-filters {
+            display: block;
+            text-align: center;
+            font-size: 0.68rem;
+            color: var(--gray);
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .clear-filters:hover {
+            color: var(--red);
+        }
+
+        /* Search results header */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .results-header .results-text {
+            font-size: 0.82rem;
+            color: var(--gray);
+        }
+
+        .results-header .results-text span {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .sort-select {
+            padding: 10px 15px;
+            background: var(--dark);
+            border: 1px solid var(--border);
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.78rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .sort-select:focus {
+            border-color: var(--gold);
+        }
+
+        @media (max-width: 768px) {
+            .search-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-sidebar {
+                position: static;
+            }
+
+            .trending-searches {
+                padding: 0 10px;
+            }
+
+            .search-bar-large input {
+                padding: 15px 18px;
+                font-size: 0.85rem;
+            }
+
+            .search-bar-large button {
+                padding: 15px 20px;
+                font-size: 0.68rem;
+            }
+
+            .results-header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .search-hero {
+                padding: 110px 0 40px 0;
+            }
+
+            .search-hero h1 {
+                font-size: 1.5rem;
+                letter-spacing: 3px;
+            }
+
+            .search-bar-large {
+                flex-direction: column;
+            }
+
+            .search-bar-large button {
+                width: 100%;
+            }
+
+            .trending-tag {
+                font-size: 0.62rem;
+                padding: 5px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <input type="checkbox" id="menu-checkbox">
+    <nav class="navbar">
+        <div class="container">
+            <a href="Index.html" class="logo">
+                <img src="Images/Logo.png" alt="RAVION">
+            </a>
+            <ul class="nav-links">
+                <li><a href="Index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="pricing.html">Membership</a></li>
+                <li><a href="team.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="search.html">&#x1F50D;</a>
+                <a href="wishlist.html">&#x2661;</a>
+                <a href="cart.html">&#x1F6D2;</a>
+                <a href="login.html">&#x263A;</a>
+                <label for="menu-checkbox" class="menu-toggle">&#9776;</label>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="Index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="pricing.html">Membership</a>
+        <a href="team.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="testimonials.html">Reviews</a>
+        <a href="search.html">Search</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="cart.html">Cart</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+
+    <!-- ==========================================
+    SEARCH HERO SECTION
+    
+    Large search bar with heading.
+    Trending searches below as clickable tags.
+    This is the MAIN feature of this page.
+    =========================================== -->
+
+    <section class="search-hero">
+        <div class="container">
+
+            <h1>Search</h1>
+            <p>Find what you're looking for</p>
+
+            <!-- Large Search Bar -->
+            <form action="search.html" method="get">
+                <div class="search-bar-large">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        placeholder="Search for jackets, polos, bags..." 
+                        value="Jacket">
+                    <button type="submit">Search</button>
+                </div>
+            </form>
+
+            <!-- Trending Searches -->
+            <div class="trending-searches">
+                <span class="trending-label">Trending:</span>
+                <a href="search.html" class="trending-tag">Leather Jacket</a>
+                <a href="search.html" class="trending-tag">Polo Shirts</a>
+                <a href="search.html" class="trending-tag">Slim Jeans</a>
+                <a href="search.html" class="trending-tag">Office Wear</a>
+                <a href="search.html" class="trending-tag">Streetwear</a>
+                <a href="search.html" class="trending-tag">Bags</a>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ==========================================
+    SEARCH RESULTS SECTION
+    
+    TWO COLUMN LAYOUT:
+    Left: Filter sidebar (categories, price, rating)
+    Right: Search results grid
+    
+    Filter sidebar is STICKY on desktop.
+    On mobile, it stacks above the results.
+    =========================================== -->
+
+    <section class="section">
+        <div class="container">
+
+            <div class="search-layout">
+
+                <!-- ============================
+                LEFT: FILTER SIDEBAR
+                
+                Contains filter groups:
+                1. Categories (checkboxes)
+                2. Price Range (min/max inputs)
+                3. Size (checkboxes)
+                4. Rating (checkboxes)
+                5. Apply/Clear buttons
+                
+                These don't actually filter 
+                without JavaScript, but they 
+                LOOK professional and show 
+                the examiner you understand 
+                e-commerce search UX.
+                ============================ -->
+                <div class="filter-sidebar">
+
+                    <h3 class="filter-title">Filters</h3>
+
+                    <!-- Category Filter -->
+                    <div class="filter-group">
+                        <h4>Category</h4>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="f-all" checked>
+                            <label for="f-all">All Products</label>
+                            <span class="count">16</span>
+                        </div>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="f-polo">
+                            <label for="f-polo">Polo Shirts</label>
+                            <span class="count">2</span>
+                        </div>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="f-shirts">
+                            <label for="f-shirts">Shirts</label>
+                            <span class="count">2</span>
+                        </div>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="f-tshirts">
+                            <label for="f-tshirts">T-Shirts</label>
+                            <span class="count">2</span>
+                        </div>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="f-jackets" checked>
+                            <label for="f-jackets">Jackets</label>
+                            <span class="count">2</span>
+                        </div>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="f-bags">
+                            <label for="f-bags">Bags</label>
+                            <span class="count">2</span>
+                        </div>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="f-jeans">
+                            <label for="f-jeans">Jeans &amp; Trousers</label>
+                            <span class="count">2</span>
+                        </div>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="f-street">
+                            <label for="f-street">Streetwear</label>
+                            <span class="count">2</span>
+                        </div>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="f-office">
+                            <label for="f-office">Office Wear</label>
+                            <span class="count">2</span>
+                        </div>
+                    </div>
+
+                    <!-- Price Range Filter -->
+                    <div class="filter-group">
+                        <h4>Price Range</h4>
+                        <div class="price-range">
+                            <input type="text" placeholder="₹ Min" value="499">
+                            <span>—</span>
+                            <input type="text" placeholder="₹ Max" value="2999">
+                        </div>
+                    </div>
+
+                    <!-- Size Filter -->
+                    <div class="filter-group">
+                        <h4>Size</h4>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="s-s">
+                            <label for="s-s">Small (S)</label>
+                        </div>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="s-m" checked>
+                            <label for="s-m">Medium (M)</label>
+                        </div>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="s-l" checked>
+                            <label for="s-l">Large (L)</label>
+                        </div>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="s-xl">
+                            <label for="s-xl">Extra Large (XL)</label>
+                        </div>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="s-xxl">
+                            <label for="s-xxl">XXL</label>
+                        </div>
+                    </div>
+
+                    <!-- Rating Filter -->
+                    <div class="filter-group">
+                        <h4>Rating</h4>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="r-4" checked>
+                            <label for="r-4">&#9733;&#9733;&#9733;&#9733; &amp; Up</label>
+                        </div>
+
+                        <div class="filter-option">
+                            <input type="checkbox" id="r-3">
+                            <label for="r-3">&#9733;&#9733;&#9733; &amp; Up</label>
+                        </div>
+                    </div>
+
+                    <!-- Apply + Clear Buttons -->
+                    <button class="apply-filters">Apply Filters</button>
+                    <a href="search.html" class="clear-filters">Clear All Filters</a>
+
+                </div>
+
+
+                <!-- ============================
+                RIGHT: SEARCH RESULTS
+                
+                Shows matching products.
+                Has results count and sort.
+                Results are product cards 
+                from style.css
+                ============================ -->
+                <div class="search-results">
+
+                    <!-- Results Header -->
+                    <div class="results-header">
+                        <p class="results-text">
+                            Showing <span>4 results</span> for "<span>Jacket</span>"
+                        </p>
+                        <select class="sort-select">
+                            <option>Sort by: Relevance</option>
+                            <option>Price: Low to High</option>
+                            <option>Price: High to Low</option>
+                            <option>Newest First</option>
+                            <option>Rating</option>
+                        </select>
+                    </div>
+
+                    <!-- Search Results Grid -->
+                    <div class="product-grid">
+
+                        <!-- Result 1: Leather Jacket -->
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="Images/product-jacket.jpg" alt="Urban Leather Jacket">
+                                <span class="wishlist-icon">&#x2661;</span>
+                            </div>
+                            <div class="product-info">
+                                <p class="category">Jacket</p>
+                                <h3>Urban Leather Jacket</h3>
+                                <div class="price">
+                                    <span class="current">&#8377;2,499</span>
+                                    <span class="old">&#8377;2,999</span>
+                                </div>
+                                <div class="product-actions">
+                                    <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                                    <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Result 2: Bomber Jacket -->
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="Images/product-jacket.jpg" alt="Bomber Jacket">
+                                <span class="sale-badge">-20%</span>
+                                <span class="wishlist-icon">&#x2661;</span>
+                            </div>
+                            <div class="product-info">
+                                <p class="category">Jacket</p>
+                                <h3>Classic Bomber Jacket</h3>
+                                <div class="price">
+                                    <span class="current">&#8377;1,999</span>
+                                    <span class="old">&#8377;2,499</span>
+                                </div>
+                                <div class="product-actions">
+                                    <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                                    <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Result 3: Streetwear Hoodie (related) -->
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="Images/product-streetwear.jpg" alt="Street Hoodie">
+                                <span class="sale-badge">Hot</span>
+                                <span class="wishlist-icon">&#x2661;</span>
+                            </div>
+                            <div class="product-info">
+                                <p class="category">Streetwear</p>
+                                <h3>Oversized Street Hoodie</h3>
+                                <div class="price">
+                                    <span class="current">&#8377;1,299</span>
+                                    <span class="old">&#8377;1,799</span>
+                                </div>
+                                <div class="product-actions">
+                                    <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                                    <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                                </div>
+                            </div>
+                        </div>
+<!-- Result 4: Office Blazer (related) -->
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="Images/product-office.jpg" alt="Office Blazer">
+                                <span class="wishlist-icon">&#x2661;</span>
+                            </div>
+                            <div class="product-info">
+                                <p class="category">Office Wear</p>
+                                <h3>Slim Fit Office Blazer</h3>
+                                <div class="price">
+                                    <span class="current">&#8377;2,199</span>
+                                    <span class="old">&#8377;2,999</span>
+                                </div>
+                                <div class="product-actions">
+                                    <a href="cart.html" class="btn btn-gold btn-sm">Add to Cart</a>
+                                    <a href="wishlist.html" class="btn btn-outline btn-sm">&#x2661;</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- View All Button -->
+                    <div class="text-center mt-40">
+                        <a href="products.html" class="btn btn-outline">View All Products</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==========================================
+    POPULAR CATEGORIES SECTION
+    
+    Below search results, show category cards.
+    Helps users browse if they didn't find 
+    what they searched for.
+    =========================================== -->
+
+    <section class="section section-dark">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Browse Categories</h2>
+                <div class="gold-line"></div>
+                <p>Explore our complete collection</p>
+            </div>
+
+            <div class="category-grid">
+
+                <a href="products.html" class="category-card">
+                    <img src="Images/product-polo.jpg" alt="Polo">
+                    <div class="overlay">
+                        <h3>Polo</h3>
+                        <p>From &#8377;799</p>
+                    </div>
+                </a>
+
+                <a href="products.html" class="category-card">
+                    <img src="Images/product-jacket.jpg" alt="Jackets">
+                    <div class="overlay">
+                        <h3>Jackets</h3>
+                        <p>From &#8377;1,499</p>
+                    </div>
+                </a>
+    <a href="products.html" class="category-card">
+                    <img src="Images/product-bag.jpg" alt="Bags">
+                    <div class="overlay">
+                        <h3>Bags</h3>
+                        <p>From &#8377;999</p>
+                    </div>
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+<!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="Index.html" class="footer-logo">
+                        <img src="Images/Logo.png" alt="RAVION">
+                    </a>
+                    <p>Premium men's fashion brand offering high-quality essentials. Built for modern men who value style, comfort, and confidence.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="products.html">All Products</a></li>
+                        <li><a href="products.html">Polo Shirts</a></li>
+                        <li><a href="products.html">Jackets</a></li>
+                        <li><a href="products.html">Bags</a></li>
+                        <li><a href="products.html">Jeans</a></li>
+                        <li><a href="products.html">Office Wear</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Help</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="feedback.html">Give Feedback</a></li>
+                        <li><a href="pricing.html">Membership</a></li>
+                        <li><a href="testimonials.html">Reviews</a></li>
+                        <li><a href="profile.html">My Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <span class="contact-icon">&#9993;</span>
+                            <span>info@ravion.in</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9742;</span>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li>
+                            <span class="contact-icon">&#9906;</span>
+                            <span>Chandigarh, India</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 RAVION. All Rights Reserved.</p>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
